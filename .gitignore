@@ -1,0 +1,7 @@
+*.zip
+node_modules/
+.next/
+.env*
+service-account.json
+service-account.json
+service-account.json

@@ -1,0 +1,37 @@
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-area,
+  .printable-area * {
+    visibility: visible;
+  }
+
+  .printable-hidden {
+    display: none !important;
+  }
+
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .printable-page-content {
+    page-break-after: always;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .printable-page-content:last-child {
+    page-break-after: avoid;
+  }
+}
+
+@page {
+  size: portrait;
+  margin: 0.5in;
+}

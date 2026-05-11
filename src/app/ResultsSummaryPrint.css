@@ -1,0 +1,21 @@
+
+@media print {
+  .summary-report-table {
+    font-size: 0.7rem; /* Smaller font for dense data */
+  }
+
+  .summary-report-table th,
+  .summary-report-table td {
+    padding: 4px 6px; /* Adjust padding for compactness */
+  }
+
+  /* Prevent class/school names from wrapping */
+  .summary-report-table .no-wrap {
+    white-space: nowrap;
+  }
+
+  @page {
+    size: auto;
+    margin: 0.5in;
+}
+}

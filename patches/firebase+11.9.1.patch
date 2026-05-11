@@ -1,0 +1,53 @@
+diff --git a/node_modules/firebase/auth/dist/esm/index.browser.js b/node_modules/firebase/auth/dist/esm/index.browser.js
+index 2818967..45c0836 100644
+--- a/node_modules/firebase/auth/dist/esm/index.browser.js
++++ b/node_modules/firebase/auth/dist/esm/index.browser.js
+@@ -10,7 +10,13 @@
+ import { registerAuth } from './src/core/auth/register';
+ import { name, version } from './package.json';
+ 
+-const registerAuthInBrowser = () => registerAuth(registerVersion(name, version, 'browser'));
++const registerAuthInBrowser = () => {
++  // Register the browser build of Auth
++  registerAuth(registerVersion(name, version, 'browser'));
++  // Register the JS entry point for the browser build of Auth
++  registerVersion(name, version, 'esm2017');
++};
++
+ 
+ // This will be tree-shaken by webpack
+ registerAuthInBrowser();
+diff --git a/node_modules/firebase/auth/dist/esm/index.js b/node_modules/firebase/auth/dist/esm/index.js
+index 8c9d2c6..26732ef 100644
+--- a/node_modules/firebase/auth/dist/esm/index.js
++++ b/node_modules/firebase/auth/dist/esm/index.js
+@@ -1,6 +1,6 @@
+ import { registerVersion, _registerComponent } from '@firebase/app';
+-import { browserLocalPersistence, browserPopupRedirectResolver, browserSessionPersistence, indexedDBLocalPersistence, initializeAuth, inMemoryPersistence } from './src/platform_browser/index.js';
+ import { AuthImpl } from './src/core/auth/auth_impl.js';
++import { _isBrowser } from '@firebase/util';
+ 
+ /**
+  * @license
+@@ -9,7 +9,15 @@
+  */
+ const name = "@firebase/auth";
+ const version = "1.7.0";
+-const registerAuth = (instance) => {
++
++const registerAuth = instance => {
++  // Register the main Auth component
+   _registerComponent(new instance());
++
++  // Register the JS entry point for the browser build of Auth
++  if (_isBrowser) {
++    registerVersion(name, version, 'esm2017');
++  }
+ };
+ registerVersion(name, version);
+-registerAuth(AuthImpl);
++
++if (_isBrowser) {
++  registerAuth(AuthImpl);
++}
+\ No newline at end of file

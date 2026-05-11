@@ -1,0 +1,23 @@
+
+@media print {
+  .report-table {
+    font-size: 0.8rem;
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 4px 6p
+  }
+
+  /* Prevent class names from wrapping */
+  .report-table .no-wrap {
+    white-space: nowrap;
+  }
+
+  /* Force printing of background colors for chart legends */
+  [data-chart] [style*="background-color"],
+  [data-chart] [style*="background"] {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}

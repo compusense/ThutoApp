@@ -1,0 +1,173 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isSignedIn() && request.auth.token.role == role;
+    }
+    
+    function isSuperAdmin() {
+      return hasRole('super-admin');
+    }
+    
+    function isSchoolHead() {
+      return hasRole('school-head');
+    }
+    
+    function isTeacher() {
+      return hasRole('teacher');
+    }
+    
+    function isSubRegionAdmin() {
+      return hasRole('sub-region-admin');
+    }
+    
+    function isStudent() {
+      return hasRole('student');
+    }
+    
+    function isDeveloper() {
+      return hasRole('developer');
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin() || isOwner(userId);
+    }
+
+    // --- Geographical Structure ---
+    match /regions/{regionId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    match /subRegions/{subRegionId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    // --- School Structure and Registry ---
+    match /schools/{schoolId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+
+      match /classes/{classId} {
+        allow read: if isSignedIn();
+        allow write: if isSuperAdmin() || isSchoolHead();
+
+        match /students/{studentId} { allow read, write: if isSignedIn(); }
+        match /subjects/{subjectId} { allow read, write: if isSignedIn(); }
+        match /resultsSnapshots/{snapshotId} { allow read: if isSignedIn(); allow write: if isTeacher() || isSchoolHead() || isSuperAdmin(); }
+        match /assessmentTotals/{totalId} { allow read: if isSignedIn(); allow write: if isTeacher() || isSchoolHead() || isSuperAdmin(); }
+        match /narrativeReports/{reportId} { allow read: if isSignedIn(); allow write: if isTeacher() || isSchoolHead() || isSuperAdmin(); }
+      }
+
+      match /students/{studentId} {
+        allow read: if isSignedIn();
+        allow write: if isSuperAdmin() || isSchoolHead();
+
+        match /marks/{markId} { 
+          allow read: if isSignedIn(); 
+          allow write: if isTeacher() || isSchoolHead() || isSuperAdmin(); 
+        }
+      }
+
+      match /invigilations/{invigId} { allow read, write: if isSignedIn(); }
+      
+      match /notifications/{notifId} { 
+        allow read: if isSignedIn(); 
+        allow update: if isSchoolHead() && request.auth.token.schoolId == schoolId;
+        allow write: if isSubRegionAdmin() || isSuperAdmin(); 
+      }
+
+      match /examMaterials/{notifId} { allow read: if isSignedIn(); allow write: if isSubRegionAdmin() || isSuperAdmin(); }
+      match /publishedExams/{pubId} { allow read: if isSignedIn(); allow write: if isSchoolHead() || isSuperAdmin(); }
+      match /actionPlans/{planId} { allow read: if isSignedIn(); allow write: if isSchoolHead() || isSuperAdmin(); }
+    }
+
+    // --- Curriculum and Content ---
+    match /syllabi/{syllabusId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    match /notes/{noteId} {
+      allow read: if isSignedIn();
+      allow write: if isTeacher() || isSuperAdmin();
+      
+      match /quizzes/{quizId} {
+        allow read: if isSignedIn();
+        allow write: if isTeacher() || isSuperAdmin();
+        
+        match /quizAttempts/{attemptId} { 
+            allow read: if isSignedIn(); 
+            allow create: if isStudent() && request.resource.data.studentId == request.auth.uid; 
+        }
+      }
+    }
+
+    match /assignments/{assignmentId} { 
+      allow read: if isSignedIn(); 
+      allow write: if isTeacher() || isSuperAdmin(); 
+    }
+    
+    match /accessLogs/{logId} { 
+        allow read: if isTeacher() || isSchoolHead() || isSuperAdmin(); 
+        allow create: if isStudent() && request.resource.data.studentId == request.auth.uid; 
+    }
+
+    // --- Forms and Surveys ---
+    match /forms/{formId} {
+      allow read: if isSignedIn();
+      allow write: if isSubRegionAdmin() || isSuperAdmin();
+      
+      match /submissions/{submissionId} { 
+          allow read: if isSubRegionAdmin() || isSuperAdmin(); 
+          allow create: if isSchoolHead() && request.resource.data.submittedBy == request.auth.uid; 
+      }
+    }
+
+    match /examTimetables/{timetableId} { allow read: if isSignedIn(); allow write: if isSubRegionAdmin() || isSuperAdmin(); }
+    match /examMaterials/{materialId} { allow read: if isSignedIn(); allow write: if isSubRegionAdmin() || isSuperAdmin(); }
+
+    // --- Games Sandbox ---
+    match /games/{gameId} {
+      allow list: if isSignedIn();
+      allow get: if isSignedIn() && (isSuperAdmin() || resource.data.developerId == request.auth.uid || resource.data.status == 'approved');
+      allow create: if isDeveloper() && request.resource.data.developerId == request.auth.uid && request.resource.data.status == 'pending';
+      allow update: if isSuperAdmin() || (isDeveloper() && isOwner(resource.data.developerId));
+      allow delete: if isSuperAdmin() || (isDeveloper() && isOwner(resource.data.developerId));
+    }
+
+    match /gameActivity/{activityId} {
+      allow create: if isStudent() && request.resource.data.studentId == request.auth.uid;
+      allow read: if isSuperAdmin() || isOwner(resource.data.studentId);
+    }
+
+    // --- Multi-player Games ---
+    match /tugOfWarSessions/{sessionId} {
+        allow read, create, update: if isStudent();
+        allow delete: if isStudent() && (resource.data.p1.uid == request.auth.uid || resource.data.p2.uid == request.auth.uid);
+    }
+    
+    // --- AI marking ---
+    match /markingSessions/{sessionId} {
+        allow read, write: if isTeacher() || isSchoolHead() || isSuperAdmin();
+    }
+  }
+}

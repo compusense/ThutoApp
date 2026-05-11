@@ -1,0 +1,196 @@
+
+@media print {
+  /* Reset common layout containers that cause blank first page */
+  html, body, #__next, [data-nextjs-scroll-focus-boundary] {
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Kill any min-h-screen or flex-1 that creates invisible height */
+  .min-h-screen, [class*="flex-1"], [class*="min-h-"], main, div {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  /* Hide everything by default using visibility to allow overrides */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Hide known layout elements completely */
+  header, nav, footer, aside, .navbar, .sidebar, .app-header, .toast-container,
+  [class*="sheet"], [class*="drawer"] {
+    display: none !important;
+  }
+
+  /* 
+     CRITICAL: Portals and Dialogs must not be display:none if they contain printable content.
+     We reset their positioning so they behave like normal block elements on the page.
+  */
+  [data-radix-portal], [role="dialog"] {
+    display: block !important;
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide the dark dialog overlay and close buttons */
+  .fixed.inset-0.bg-black\/80, button[aria-label="Close"], [data-radix-collection] {
+    display: none !important;
+  }
+
+  /* Show only the printable area */
+  .printable-area,
+  .printable-area * {
+    visibility: visible !important;
+  }
+  
+  .printable-hidden, .printable-hidden * {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    position: absolute;
+  }
+
+  .printable-area {
+    position: static; /* This is the key fix: treat it as a normal element */
+    width: auto; /* Let it adapt to the page width */
+    height: auto;
+    max-width: none !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    transform: none !important;
+  }
+  
+  .printable-page-content {
+    page-break-inside: avoid;
+    page-break-after: auto;
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+ }
+   .printable-page-content:last-child {
+    page-break-after: avoid;
+  } 
+
+  /* Main Report Table Styles */
+  .report-table {
+    font-size: 0.7rem; /* Student results font size */
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 2px 2px; /* Reduced padding */
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  
+  .report-table .sticky {
+    position: static;
+  }
+  
+  /* Widen the student name column and shrink the number column*/
+  .report-table th:first-child,
+  .report-table td:first-child {
+    border-left-width: 1px;
+    width: 0.5cm; /* Make number column narrow */
+  }
+  .report-table th:nth-child(2),
+  .report-table td:nth-child(2) {
+      min-width: 100px; /* Give more space to the name column */
+      white-space: nowrap; /* Prevent name wrapping */
+  }
+
+  .report-table th:last-child,
+  .report-table td:last-child {
+      border-right-width: 1px;
+  }
+  
+  .report-table th {
+    font-weight: 600;
+  }
+
+  /* Summary Report Styles */
+  .summary-container > div {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    space-y-4: 0 !important;
+    
+  }
+
+  .summary-container > div:last-child {
+    margin-top: 3rem !important;
+  }
+
+  .summary-container .summary-table {
+    font-size: 0.7rem;
+  }
+  .summary-container .summary-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .summary-container .summary-description {
+    display: none;
+  }
+  .summary-container .summary-table th,
+  .summary-container .summary-table td {
+    padding: 4px 6px;
+  }
+
+  .summary-container .summary-table th:first-child,
+  .summary-container .summary-table td:first-child {
+    min-width: 100px;
+    white-space: nowrap;
+  }
+  
+  .results-tracking-table td,
+  .results-tracking-table th {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    border-bottom-width: 0; /* Remove bottom border from cells */
+  }
+
+  .results-tracking-table tr {
+    border-bottom: 1px solid hsl(var(--border)); /* Apply border to the row */
+  }
+  
+  .results-tracking-table th {
+      border-top-width: 1px;
+  }
+
+  .results-tracking-table td:first-child,
+  .results-tracking-table th:first-child {
+    border-left-width: 1px;
+  }
+  .results-tracking-table td:last-child,
+  .results-tracking-table th:last-child {
+    border-right-width: 1px;
+  }
+
+
+  @page {
+    size: landscape;
+    margin: 0.5in;
+  }
+}

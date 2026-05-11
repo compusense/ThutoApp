@@ -1,0 +1,1046 @@
+
+{
+  "entities": {
+    "Game": {
+      "title": "Game",
+      "description": "Metadata for a game uploaded to the sandbox.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "subject": { "type": "string" },
+        "gradeLevel": { "type": "string" },
+        "developerId": { "type": "string" },
+        "developerName": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "storagePath": { "type": "string", "description": "Path to index.html in Firebase Storage" },
+        "gameUrl": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
+        "manifest": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "version": { "type": "string" },
+            "subject": { "type": "string" },
+            "gradeLevel": { "type": "string" },
+            "minScoreToPass": { "type": "number" }
+          },
+          "required": ["title", "version", "subject", "gradeLevel"]
+        },
+        "playCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "reviewedBy": { "type": "string" }
+      },
+      "required": ["title", "subject", "gradeLevel", "developerId", "status", "storagePath", "gameUrl", "manifest", "playCount", "createdAt"]
+    },
+    "GameActivity": {
+      "title": "Game Activity",
+      "description": "Records a student's session and score for a game.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "gameId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "score": { "type": "number" },
+        "timeSpent": { "type": "number", "description": "in seconds" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["gameId", "studentId", "score", "timeSpent", "completedAt"]
+    },
+    "TugOfWarSession": {
+        "title": "Tug of War Session",
+        "description": "State of a live multiplayer math battle.",
+        "type": "object",
+        "properties": {
+            "id": { "type": "string" },
+            "p1": { "type": "object" },
+            "p2": { "type": "object" },
+            "status": { "type": "string", "enum": ["waiting", "starting", "active", "finished", "expired"] },
+            "winner": { "type": "string" },
+            "lastActiveAt": { "type": "string", "format": "date-time" },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "startAt": { "type": "string", "format": "date-time" }
+        }
+    },
+    "ResultsSnapshot": {
+      "title": "Results Snapshot",
+      "description": "A snapshot of a class's results for a specific assessment at a point in time.",
+      "type": "object",
+      "properties": {
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string" },
+        "assessment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "className": { "type": "string" },
+        "teacherIdAtTimeOfSave": { "type": "string", "description": "The UID of the teacher who owned the class when the snapshot was created." },
+        "studentReports": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "summaryData": { "type": "object" },
+        "subjects": { "type": "array", "items": { "type": "object" } }
+      },
+      "required": ["schoolId", "classId", "academicYear", "term", "assessment", "createdAt", "createdBy"]
+    },
+    "MaterialAccessLog": {
+      "title": "Material Access Log",
+      "description": "Records when a student accesses a specific piece of learning material.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "The UID of the student." },
+        "studentName": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "materialId": { "type": "string", "description": "The ID of the note or quiz." },
+        "materialType": { "type": "string", "enum": ["note", "quiz"] },
+        "accessedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "studentName", "schoolId", "classId", "materialId", "materialType", "accessedAt"]
+    },
+    "QuizAttempt": {
+      "title": "Quiz Attempt",
+      "description": "Represents a single attempt by a student to complete a quiz.",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string" },
+        "noteId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "percentage": { "type": "number" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": { "type": "string" },
+              "selectedAnswer": { "type": "string" },
+              "correctAnswer": { "type": "string" },
+              "isCorrect": { "type": "boolean" }
+            },
+            "required": ["question", "selectedAnswer", "correctAnswer", "isCorrect"]
+          }
+        }
+      },
+      "required": ["quizId", "noteId", "studentId", "studentName", "score", "totalQuestions", "percentage", "startedAt", "completedAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "A quiz generated from a lesson note.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "noteId": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": { "type": "string" },
+              "type": { "type": "string", "enum": ["multiple-choice", "true-false"] },
+              "options": { "type": "array", "items": { "type": "string" } },
+              "correctAnswer": { "type": "string" }
+            },
+            "required": ["question", "type", "correctAnswer"]
+          }
+        }
+      },
+      "required": ["title", "noteId", "createdBy", "createdAt", "questions"]
+    },
+    "Note": {
+      "title": "Note",
+      "description": "A note created by a teacher, often based on a syllabus topic.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string", "description": "The body of the note, can contain markdown." },
+        "createdBy": { "type": "string", "description": "UID of the teacher who created the note." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "classId": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "subjectId": { "type": "string" }
+      },
+      "required": ["title", "content", "createdBy", "createdAt", "classId", "schoolId", "subjectId"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Represents a note or quiz assigned to a class.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["note", "quiz"] },
+        "noteId": { "type": "string" },
+        "quizId": { "type": "string", "description": "Optional, only if it's a quiz assignment." },
+        "classId": { "type": "string" },
+        "assignedBy": { "type": "string" },
+        "assignedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "noteId", "classId", "assignedBy", "assignedAt"]
+    },
+    "Syllabus": {
+      "title": "Syllabus",
+      "description": "A curriculum syllabus for a specific grade and subject, containing multiple modules.",
+      "type": "object",
+      "properties": {
+        "schoolLevel": { "type": "string" },
+        "gradeLevel": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "uploadedAt": { "type": "string", "format": "date-time" },
+        "uploadedBy": { "type": "string" },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "generalObjectives": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "text": { "type": "string" },
+                          "specificObjectives": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "objectiveNumber": { "type": "string", "description": "e.g., 1.1.1.1" },
+                                "text": { "type": "string" }
+                              },
+                              "required": ["text", "objectiveNumber"]
+                            }
+                          }
+                        },
+                        "required": ["text", "specificObjectives"]
+                      }
+                    }
+                  },
+                  "required": ["name", "generalObjectives"]
+                }
+              }
+            },
+            "required": ["name", "topics"]
+          }
+        }
+      },
+      "required": ["schoolLevel", "gradeLevel", "subjectId", "modules"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a user's profile in the system.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID from Firebase Authentication."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's full display name."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The user's first name(s)."
+        },
+        "surname": {
+          "type": "string",
+          "description": "The user's last name or surname."
+        },
+        "photoURL": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the user's profile picture."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user within the application.",
+          "enum": ["super-admin", "school-head", "teacher", "sub-region-admin", "student", "developer"]
+        },
+        "tugOfWarScore": {
+            "type": "number",
+            "description": "Accumulated points from Math Tug of War battles."
+        },
+        "idNumber": {
+          "type": "string",
+          "description": "The user's national ID number."
+        },
+        "schoolId": {
+          "type": "string",
+          "description": "The ID of the school the user is associated with (for teachers and school heads)."
+        },
+        "subRegionId": {
+          "type": "string",
+          "description": "The ID of the sub-region the user is associated with (for sub-region admins)."
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["Male", "Female"]
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date"
+        },
+        "post": {
+          "type": "string",
+          "enum": [
+            "Teacher Aide",
+            "Assistant Teacher",
+            "Teacher",
+            "Senior Teacher 2",
+            "Senior Teacher 1",
+            "Senior Teacher w/o Portfolio",
+            "HOD",
+            "Deputy School Head"
+          ]
+        },
+        "portfolio": {
+          "type": "string",
+          "description": "The portfolio for a Senior Teacher 1 or HOD.",
+          "enum": [
+            "Practicals",
+            "Maths and Science",
+            "Guidance & Counselling",
+            "Sports and Culture",
+            "Learning Difficulties",
+            "Languages",
+            "Lower",
+            "Middle",
+            "Upper"
+          ]
+        },
+        "salaryScale": {
+          "type": "string",
+          "enum": ["B4", "B3", "B2", "B1", "C4", "C2", "C1", "D4", "D3", "D2", "D1"]
+        },
+        "qualification": {
+          "type": "string",
+          "description": "The user's highest teaching qualification."
+        },
+        "qualificationDetails": {
+          "type": "string",
+          "description": "Specific details for qualifications like 'Degree + PGDE'."
+        },
+        "nationality": {
+          "type": "string"
+        },
+        "natureOfEmployment": {
+          "type": "string",
+          "description": "The nature of the user's employment.",
+          "enum": ["Permanent & Pensionable", "Contract", "Temporary"]
+        },
+        "detailsComplete": {
+          "type": "boolean",
+          "description": "Flag to indicate if the user has completed their initial details."
+        },
+        "isDeactivated": {
+          "type": "boolean",
+          "description": "Flag to indicate if the user's account is deactivated."
+        },
+        "dateOfDeactivation": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time the user's account was deactivated."
+        },
+        "transferHistory": {
+          "type": "array",
+          "description": "An audit log of the user's transfers between schools.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fromSchoolId": { "type": "string" },
+              "toSchoolId": { "type": "string" },
+              "date": { "type": "string", "format": "date-time" }
+            },
+            "required": ["fromSchoolId", "toSchoolId", "date"]
+          }
+        },
+        "lastSeen": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of when the user was last active."
+        }
+      },
+      "required": ["uid", "email", "role", "idNumber"]
+    },
+    "Region": {
+      "title": "Region",
+      "description": "A geographical region, like a province or state.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the region."
+        }
+      },
+      "required": ["name"]
+    },
+    "SubRegion": {
+      "title": "Sub-Region",
+      "description": "A sub-division within a region.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the sub-region."
+        },
+        "regionId": {
+          "type": "string",
+          "description": "The ID of the parent region."
+        }
+      },
+      "required": ["name", "regionId"]
+    },
+    "School": {
+      "title": "School",
+      "description": "An educational institution.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the school."
+        },
+        "regionId": {
+          "type": "string",
+          "description": "The ID of the region the school belongs to."
+        },
+        "subRegionId": {
+          "type": "string",
+          "description": "The ID of the sub-region the school belongs to (optional)."
+        },
+        "schoolHeadId": {
+          "type": "string",
+          "description": "The UID of the user who is the head of the school (optional)."
+        },
+        "regNo": {
+          "type": "string",
+          "description": "The school's official registration number."
+        },
+        "group": {
+          "type": "string",
+          "description": "The school group, determined by school roll (temporary manual entry)."
+        },
+        "category": {
+          "type": "string",
+          "description": "The school category, determined by classroom stream (temporary manual entry)."
+        },
+        "schoolType": {
+          "type": "string",
+          "description": "The type of the school (e.g., Primary, Senior Secondary).",
+          "enum": [
+            "Primary School",
+            "Junior Secondary School",
+            "Senior Secondary School"
+          ]
+        }
+      },
+      "required": ["name", "regionId", "regNo", "schoolType"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "A class within a school, such as Standard 1A.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The full name of the class (e.g., Standard 1A)."
+        },
+        "gradeLevel": {
+          "type": "string",
+          "description": "The grade level of the class."
+        },
+        "stream": {
+          "type": "string",
+          "description": "The stream of the class (e.g., A, B, C)."
+        },
+        "schoolId": {
+          "type": "string",
+          "description": "The ID of the school this class belongs to."
+        },
+        "teacherId": {
+          "type": "string",
+          "description": "The ID of the teacher assigned to this class."
+        },
+        "promotionHistory": {
+          "type": "array",
+          "description": "Audit trail linking this class to its ancestor classes via promotion.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fromClassId": { "type": "string" },
+              "fromYear": { "type": "string" },
+              "toYear": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["name", "gradeLevel", "stream", "schoolId"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Represents a student enrolled in a school.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The UID of the student's user account in Firebase Authentication, if one exists."
+        },
+        "admissionNumber": {
+          "type": "string",
+          "description": "The unique admission number for the student within the school."
+        },
+        "idNumber": {
+          "type": "string",
+          "description": "The student's Birth Certificate or National ID number."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The student's first name."
+        },
+        "surname": {
+          "type": "string",
+          "description": "The student's surname."
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "description": "The student's date of birth."
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["Male", "Female"],
+          "description": "The student's gender."
+        },
+        "schoolId": {
+          "type": "string",
+          "description": "The ID of the school this student is enrolled in."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the student.",
+          "enum": ["Active", "Dropped Out", "Transferred Out", "Deceased", "Graduated"]
+        },
+        "dateOfStatusChange": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the student's status was last changed."
+        },
+        "reasonForStatusChange": {
+          "type": "string",
+          "description": "Reason for the status change, e.g., name of school transferred to."
+        }
+      },
+      "required": ["firstName", "surname", "schoolId", "status"]
+    },
+    "StudentEnrollment": {
+      "title": "Student Enrollment",
+      "description": "Represents a student's enrollment in a class.",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "description": "The ID of the student enrolled in the class."
+        }
+      },
+      "required": ["studentId"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "An academic subject taught in schools.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the subject (e.g., Mathematics)."
+        },
+        "subjectCode": {
+          "type": "string",
+          "description": "The official code for the subject (e.g., MATH-101)."
+        },
+        "schoolLevel": {
+          "type": "string",
+          "description": "The educational level this subject is intended for.",
+          "enum": [
+            "Primary School",
+            "Junior Secondary School",
+            "Senior Secondary School"
+          ]
+        }
+      },
+      "required": ["name", "schoolLevel"]
+    },
+    "ClassSubject": {
+      "title": "Class Subject",
+      "description": "Represents a subject allocated to a class for a specific academic year.",
+      "type": "object",
+      "properties": {
+        "subjectId": {
+          "type": "string",
+          "description": "The ID of the subject from the master list."
+        },
+        "academicYear": {
+          "type": "string",
+          "description": "The academic year for which the subject is allocated (e.g., '2024')."
+        }
+      },
+      "required": ["subjectId", "academicYear"]
+    },
+    "TermMark": {
+      "title": "Term Mark",
+      "description": "Stores a single mark for a student in a specific subject, term, and assessment.",
+      "type": "object",
+      "properties": {
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "assessment": {
+          "type": "string",
+          "description": "Name of the assessment, e.g., Test 1, Final Exam"
+        },
+        "score": { "type": "number" },
+        "total": { "type": "number", "description": "The total possible score for the assessment." },
+        "lastModified": { "type": "string", "format": "date-time" },
+        "lastModifiedBy": { "type": "string" }
+      },
+      "required": ["schoolId", "classId", "studentId", "subjectId", "academicYear", "term", "assessment", "score", "total"]
+    },
+    "Invigilation": {
+      "title": "Invigilation Assignment",
+      "description": "Assigns a teacher to invigilate an end-of-term exam for a specific class.",
+      "type": "object",
+      "properties": {
+        "schoolId": {
+          "type": "string"
+        },
+        "classId": {
+          "type": "string"
+        },
+        "teacherId": {
+          "type": "string"
+        },
+        "academicYear": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string",
+          "enum": ["Term 1", "Term 2", "Term 3"]
+        }
+      },
+      "required": ["schoolId", "classId", "teacherId", "academicYear", "term"]
+    },
+    "PSLEClass": {
+      "title": "PSLE Class Student",
+      "description": "A student who has graduated from Standard 7 and is part of a PSLE cohort for a specific year.",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "description": "The ID of the graduated student."
+        }
+      },
+      "required": ["studentId"]
+    },
+    "Form": {
+      "title": "Form",
+      "description": "A dynamic form created by a Sub-Region Admin.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "subRegionId": { "type": "string" },
+        "createdBy": { "type": "string", "description": "UID of the creator" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["draft", "published", "archived"] },
+        "fields": {
+          "type": "array",
+          "description": "Defines the columns of the form's data table.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "type": { "type": "string", "enum": ["text", "textarea", "date", "number", "select-teacher"] }
+            },
+            "required": ["id", "label", "type"]
+          }
+        }
+      },
+      "required": ["title", "subRegionId", "createdBy", "createdAt", "status", "fields"]
+    },
+    "FormSubmission": {
+      "title": "Form Submission",
+      "description": "A submission of a form by a School Head, containing multiple rows of data.",
+      "type": "object",
+      "properties": {
+        "formId": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "submittedBy": { "type": "string", "description": "UID of the school head" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "responses": {
+          "type": "array",
+          "description": "An array where each element is an object representing a submitted row.",
+          "items": {
+            "type": "object",
+            "description": "An object where keys are field IDs and values are the submitted data for that field.",
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": ["formId", "schoolId", "submittedBy", "submittedAt", "responses"]
+    },
+    "ExamTimetable": {
+      "title": "Exam Timetable",
+      "description": "An exam timetable created by a Sub-Region Admin for a specific period and school level.",
+      "type": "object",
+      "properties": {
+        "subRegionId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "schoolLevel": { "type": "string", "enum": ["Primary School", "Junior Secondary School", "Senior Secondary School"] },
+        "status": { "type": "string", "enum": ["draft", "published"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["file", "structured"], "description": "The type of the timetable" },
+        "fileUrl": { "type": "string", "description": "URL to the timetable file in Firebase Storage (for type 'file')." },
+        "fileName": { "type": "string", "description": "(for type 'file')." },
+        "schedule": {
+          "type": "array",
+          "description": "An array of schedule items (for type 'structured').",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "session1_time": { "type": "string" },
+              "session1_subjectId": { "type": "string" },
+              "session1_comments": { "type": "string" },
+              "session2_time": { "type": "string" },
+              "session2_subjectId": { "type": "string" },
+              "session2_comments": { "type": "string" }
+            },
+            "required": ["id", "date", "session1_time", "session1_subjectId", "session2_time", "session2_subjectId"]
+          }
+        }
+      },
+      "required": ["subRegionId", "academicYear", "term", "schoolLevel", "status", "createdAt", "type"]
+    },
+    "ExamMaterial": {
+      "title": "Exam Material",
+      "description": "A single exam paper uploaded by a Sub-Region Admin.",
+      "type": "object",
+      "properties": {
+        "subRegionId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "schoolLevel": { "type": "string", "enum": ["Primary School", "Junior Secondary School", "Senior Secondary School"] },
+        "gradeLevel": { "type": "string" },
+        "fileUrl": { "type": "string", "description": "URL to the exam paper file in Firebase Storage." },
+        "fileName": { "type": "string" },
+        "fileType": { "type": "string" },
+        "fileSize": { "type": "number" },
+        "uploadedAt": { "type": "string", "format": "date-time" },
+        "uploadedBy": { "type": "string", "description": "UID of the uploader." }
+      },
+      "required": ["subRegionId", "academicYear", "term", "schoolLevel", "gradeLevel", "fileUrl", "fileName", "uploadedAt", "uploadedBy"]
+    },
+    "SchoolExamMaterial": {
+      "title": "School Exam Material",
+      "description": "A notification document for a School Head that new materials are available.",
+      "type": "object",
+      "properties": {
+        "subRegionId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "schoolLevel": { "type": "string", "enum": ["Primary School", "Junior Secondary School", "Senior Secondary School"] },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean", "default": false }
+      },
+      "required": ["subRegionId", "academicYear", "term", "schoolLevel", "publishedAt"]
+    },
+    "SchoolNotification": {
+      "title": "School Notification",
+      "description": "A notification for a school about a new resource.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["timetable", "material"] },
+        "referenceId": { "type": "string", "description": "ID of the timetable or material document" },
+        "subRegionId": { "type": "string" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean", "default": false },
+        "title": { "type": "string", "description": "A title for the notification, e.g., 'Term 1 Timetable'" }
+      },
+      "required": ["type", "referenceId", "subRegionId", "publishedAt", "title"]
+    },
+    "PublishedExam": {
+      "title": "Published Exam",
+      "description": "An exam paper published by a School Head to be available for teachers.",
+      "type": "object",
+      "properties": {
+        "schoolId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "schoolLevel": { "type": "string" },
+        "gradeLevel": { "type": "string" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "publishedBy": { "type": "string", "description": "UID of the school head." }
+      },
+      "required": ["schoolId", "academicYear", "term", "schoolLevel", "gradeLevel", "publishedAt", "publishedBy"]
+    },
+    "ActionPlan": {
+      "title": "Action Plan",
+      "description": "A collection of events for a school for a specific term.",
+      "type": "object",
+      "properties": {
+        "schoolId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "date": { "type": "string", "format": "date-time" },
+              "type": { "type": "string", "enum": ["Meeting", "Sports", "Exam", "Cultural", "Other"] },
+              "description": { "type": "string" }
+            },
+            "required": ["title", "date", "type"]
+          }
+        },
+        "lastModified": { "type": "string", "format": "date-time" }
+      },
+      "required": ["schoolId", "academicYear", "term", "events"]
+    },
+    "NarrativeReport": {
+      "title": "Narrative Report",
+      "description": "A narrative report for a class for a specific term.",
+      "type": "object",
+      "properties": {
+        "academicYear": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3"] },
+        "reportText": { "type": "string", "description": "The full text of the narrative report." },
+        "lastSaved": { "type": "string", "format": "date-time" }
+      },
+      "required": ["academicYear", "term", "reportText", "lastSaved"]
+    },
+    "MarkingSession": {
+      "title": "Marking Session",
+      "description": "A session for AI-powered marking of multiple choice answer sheets.",
+      "type": "object",
+      "properties": {
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "term": { "type": "string" },
+        "assessment": { "type": "string" },
+        "markingKey": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questionNumber": { "type": "number" },
+              "correctAnswer": { "type": "string" }
+            },
+            "required": ["questionNumber", "correctAnswer"]
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["schoolId", "classId", "subjectId", "academicYear", "term", "assessment", "markingKey", "createdAt", "createdBy"]
+    }
+  },
+  "auth": {
+    "providers": ["email-password"]
+  },
+  "firestore": {
+    "/games/{gameId}": {
+      "schema": { "$ref": "#/entities/Game" },
+      "description": "Collection of all educational games uploaded to the sandbox."
+    },
+    "/gameActivity/{activityId}": {
+      "schema": { "$ref": "#/entities/GameActivity" },
+      "description": "Logs of student interactions with games."
+    },
+    "/tugOfWarSessions/{sessionId}": {
+        "schema": { "$ref": "#/entities/TugOfWarSession" },
+        "description": "State of live multiplayer math battles."
+    },
+    "/syllabi/{syllabusId}": {
+      "schema": {
+        "$ref": "#/entities/Syllabus"
+      },
+      "description": "Collection of all syllabus modules."
+    },
+    "/accessLogs/{logId}": {
+      "schema": { "$ref": "#/entities/MaterialAccessLog" },
+      "description": "Logs student access to notes and quizzes."
+    },
+    "/notes/{noteId}/quizzes/{quizId}/quizAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/QuizAttempt" },
+      "description": "Stores individual student attempts for a quiz."
+    },
+    "/assignments/{assignmentId}": {
+      "schema": { "$ref": "#/entities/Assignment" },
+      "description": "Stores assignments of notes and quizzes to classes."
+    },
+    "/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/Note" },
+      "description": "Stores notes created by teachers."
+    },
+    "/notes/{noteId}/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/Quiz" },
+      "description": "Stores quizzes generated from a specific note."
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Stores public-facing user profile information."
+    },
+    "/regions/{regionId}": {
+      "schema": {
+        "$ref": "#/entities/Region"
+      },
+      "description": "Collection of all geographical regions."
+    },
+    "/subRegions/{subRegionId}": {
+      "schema": {
+        "$ref": "#/entities/SubRegion"
+      },
+      "description": "Collection of all sub-regions. Each document contains a regionId to link it to its parent region."
+    },
+    "/schools/{schoolId}": {
+      "schema": {
+        "$ref": "#/entities/School"
+      },
+      "description": "Collection of all schools."
+    },
+    "/schools/{schoolId}/classes/{classId}": {
+      "schema": {
+        "$ref": "#/entities/Class"
+      },
+      "description": "Sub-collection of classes within a specific school."
+    },
+    "/schools/{schoolId}/classes/{classId}/resultsSnapshots/{snapshotId}": {
+      "schema": {
+        "$ref": "#/entities/ResultsSnapshot"
+      },
+      "description": "Stores immutable snapshots of class results for specific assessments."
+    },
+    "/schools/{schoolId}/classes/{classId}/narrativeReports/{reportId}": {
+      "schema": {
+        "$ref": "#/entities/NarrativeReport"
+      },
+      "description": "Sub-collection of narrative reports for a class."
+    },
+    "/schools/{schoolId}/students/{studentId}": {
+      "schema": {
+        "$ref": "#/entities/Student"
+      },
+      "description": "Sub-collection for all students registered in a specific school."
+    },
+    "/schools/{schoolId}/students/{studentId}/marks/{markId}": {
+      "schema": {
+        "$ref": "#/entities/TermMark"
+      },
+      "description": "Stores all assessment marks for a specific student in a school."
+    },
+    "/schools/{schoolId}/classes/{classId}/students/{studentId}": {
+      "schema": {
+        "$ref": "#/entities/StudentEnrollment"
+      },
+      "description": "Sub-collection representing the students enrolled in a specific class."
+    },
+    "/schools/{schoolId}/classes/{classId}/subjects/{subjectId}": {
+      "schema": {
+        "$ref": "#/entities/ClassSubject"
+      },
+      "description": "Sub-collection representing the subjects allocated to a specific class for a specific year."
+    },
+    "/schools/{schoolId}/notifications/{notificationId}": {
+      "schema": {
+        "$ref": "#/entities/SchoolNotification"
+      },
+      "description": "Notifications for a school, e.g., new exam timetable."
+    },
+    "/subjects/{subjectId}": {
+      "schema": {
+        "$ref": "#/entities/Subject"
+      },
+      "description": "Master collection of all academic subjects available in the system."
+    },
+    "/schools/{schoolId}/invigilations/{invigilationId}": {
+      "schema": {
+        "$ref": "#/entities/Invigilation"
+      },
+      "description": "Stores invigilation assignments for end-of-term exams."
+    },
+    "/psleClasses/{year}/students/{studentId}": {
+      "schema": {
+        "$ref": "#/entities/PSLEClass"
+      },
+      "description": "Stores the list of students who are part of the PSLE cohort for a given year."
+    },
+    "/forms/{formId}": {
+      "schema": { "$ref": "#/entities/Form" },
+      "description": "Collection of all dynamic forms created by Sub-Region Admins."
+    },
+    "/forms/{formId}/submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/FormSubmission" },
+      "description": "Sub-collection of all submissions for a specific form."
+    },
+    "/examTimetables/{timetableId}": {
+      "schema": { "$ref": "#/entities/ExamTimetable" },
+      "description": "Timetables published by Sub-Region Admins."
+    },
+    "/examMaterials/{materialId}": {
+      "schema": { "$ref": "#/entities/ExamMaterial" },
+      "description": "All exam material files uploaded by Sub-Region Admins."
+    },
+    "/schools/{schoolId}/examMaterials/{notificationId}": {
+      "schema": { "$ref": "#/entities/SchoolExamMaterial" },
+      "description": "Notifies a school that new exam materials are available for a period."
+    },
+    "/schools/{schoolId}/publishedExams/{publishedExamId}": {
+      "schema": { "$ref": "#/entities/PublishedExam" },
+      "description": "Exam materials published by a School Head for their teachers."
+    },
+    "/schools/{schoolId}/actionPlans/{planId}": {
+      "schema": {
+        "$ref": "#/entities/ActionPlan"
+      },
+      "description": "Stores the termly action plan and events for a school."
+    },
+    "/markingSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/MarkingSession" },
+      "description": "Batch marking sessions for multiple choice answer sheets."
+    }
+  }
+}

@@ -1,0 +1,82 @@
+/*
+  This file applies a more colorful theme specifically for the student portal.
+  It overrides some of the default theme variables from globals.css when a student is logged in.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .student-portal {
+    --background: 200 50% 95%; /* Base for gradient */
+    --foreground: 215 30% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 30% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 30% 25%;
+
+    --primary: 210 80% 55%; /* A friendly, strong blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 60% 96%;
+    --secondary-foreground: 210 80% 30%;
+
+    --muted: 210 40% 95%;
+    --muted-foreground: 210 20% 45%;
+
+    --accent: 38 92% 50%; /* Warm amber for accents */
+    --accent-foreground: 24 10% 15%;
+
+    --border: 210 40% 88%;
+    --input: 210 40% 94%;
+    --ring: 210 80% 55%;
+
+    /* Sidebar specific overrides for students */
+    --sidebar-background: 195 90% 40%; /* Base for gradient */
+    --sidebar-foreground: 200 20% 98%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 24 10% 15%;
+    --sidebar-accent: 195 90% 45%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 195 90% 35%;
+  }
+
+  /* Dark mode specific for students */
+  .dark .student-portal {
+    --background: 222 47% 11%;
+    --foreground: 213 31% 91%;
+
+    --card: 222 47% 13%;
+    --card-foreground: 213 31% 91%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 213 31% 91%;
+
+    --primary: 210 70% 50%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 222 47% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 223 47% 18%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 36 100% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --border: 222 47% 20%;
+    --input: 222 47% 20%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  /* Applying the blended/gradient backgrounds */
+  .student-portal .bg-background {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--secondary)));
+  }
+
+  .student-portal [data-sidebar='sidebar'] {
+    background: linear-gradient(180deg, hsl(var(--sidebar-background)), hsl(var(--sidebar-accent)));
+  }
+}
