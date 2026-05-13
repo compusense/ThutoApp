@@ -91,7 +91,7 @@ const schoolHeadLinks = [
     label: 'Results Summary',
     icon: BarChart,
   },
-   {
+  {
     href: '/school-head/results-metrics',
     label: 'Results Metrics',
     icon: LineChart,
@@ -111,6 +111,11 @@ const schoolHeadLinks = [
     href: '/school-head/exam-management',
     label: 'Exam Management',
     icon: Book,
+  },
+  {
+    href: '/school-head/correspondence',
+    label: 'Correspondence',
+    icon: FileText,
   },
   { href: '/forms', label: 'Forms', icon: FileText },
 ];

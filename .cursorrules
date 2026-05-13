@@ -1,0 +1,21 @@
+# Thuto Project Rules
+
+## Tech Stack
+- Framework: Next.js 15 (App Router)
+- Database: Firebase Firestore
+- Styling: Tailwind CSS
+- Language: TypeScript
+
+## General Principles
+- Always use 'use client' directives only where necessary.
+- Follow Botswana marking standards (e.g., ABCDE scales) for all grading logic.
+- Ensure all components are mobile-responsive for school tablets.
+
+## Database Safety
+- Never modify Firestore security rules without explicit permission.
+- Always use the Firebase instance located in src/lib/firebase.ts.
+- DO NOT commit service-account.json or .env files.
+
+## Deployment
+- All code must pass 'npm run build' before being committed.
+- App Hosting configuration is handled via apphosting.yaml.

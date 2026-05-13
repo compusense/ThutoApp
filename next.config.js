@@ -1,6 +1,5 @@
 
 const nextConfig = {
-  swcMinify: false, // Add this line to disable SWC minification
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -24,6 +23,12 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "picsum.photos",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "educatorsperspective.com",
         port: "",
         pathname: "/**",
       },
