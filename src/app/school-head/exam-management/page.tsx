@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
@@ -6,18 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useUser } from '@/firebase/auth/use-user';
 import { useFirestore } from '@/firebase';
 import { collection, query, where, onSnapshot, getDocs, doc, writeBatch } from 'firebase/firestore';
-import { Loader2, Download, Printer, Eye, BookOpen, AlertTriangle, UploadCloud } from 'lucide-react';
+import { Loader2, Download, Printer, Eye, UploadCloud } from 'lucide-react';
 import { format } from 'date-fns';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
 } from '@/components/ui/dialog';
 import { Subject } from '@/app/super-admin/subjects/page';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,7 +27,6 @@ import { School } from '@/app/super-admin/schools/page';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { saveAs } from 'file-saver';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-
 
 interface SchoolNotification {
     id: string;
@@ -91,23 +89,20 @@ interface PublishedExam {
     publishedBy: string;
 }
 
-
 interface GroupedMaterials {
-  periodKey: string;
-  academicYear: string;
-  term: string;
-  schoolLevel: string;
-  gradeLevel: string;
-  materials: ExamMaterial[];
-  isPublished: boolean;
+    periodKey: string;
+    academicYear: string;
+    term: string;
+    schoolLevel: string;
+    gradeLevel: string;
+    materials: ExamMaterial[];
+    isPublished: boolean;
 }
 
-// Data structure for the new organization
-// { "2024": { "Term 1": { "Standard 7": { materials: [], isPublished: false } } } }
 type OrganizedMaterials = Record<string, Record<string, Record<string, { materials: ExamMaterial[], isPublished: boolean }>>>;
 
 
-function TimetablesTab({timetables, loading, viewTimetable}: {timetables: ExamTimetable[], loading: boolean, viewTimetable: (tt: ExamTimetable) => void}) {
+function TimetablesTab({ timetables, loading, viewTimetable }: { timetables: ExamTimetable[], loading: boolean, viewTimetable: (tt: ExamTimetable) => void }) {
     return (
         <Card>
             <CardHeader>
@@ -130,7 +125,7 @@ function TimetablesTab({timetables, loading, viewTimetable}: {timetables: ExamTi
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {timetables.sort((a,b) => parseInt(b.academicYear) - parseInt(a.academicYear)).map(tt => (
+                            {timetables.sort((a, b) => parseInt(b.academicYear) - parseInt(a.academicYear)).map(tt => (
                                 <TableRow key={tt.id}>
                                     <TableCell className="font-medium">{tt.academicYear}, {tt.term}</TableCell>
                                     <TableCell>{tt.schoolLevel}</TableCell>
@@ -145,8 +140,8 @@ function TimetablesTab({timetables, loading, viewTimetable}: {timetables: ExamTi
                                                 <TooltipContent>
                                                     <p>
                                                         {tt.type === 'structured'
-                                                        ? 'A schedule created in the system with specific dates and times.'
-                                                        : 'A document file (e.g., PDF) that was uploaded.'}
+                                                            ? 'A schedule created in the system with specific dates and times.'
+                                                            : 'A document file (e.g., PDF) that was uploaded.'}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -154,7 +149,7 @@ function TimetablesTab({timetables, loading, viewTimetable}: {timetables: ExamTi
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <Button size="sm" onClick={() => viewTimetable(tt)}>
-                                            {tt.type === 'file' ? <Download className="mr-2 h-4 w-4"/> : <Eye className="mr-2 h-4 w-4"/>}
+                                            {tt.type === 'file' ? <Download className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
                                             View / Download
                                         </Button>
                                     </TableCell>
@@ -169,10 +164,10 @@ function TimetablesTab({timetables, loading, viewTimetable}: {timetables: ExamTi
 }
 
 function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDownloadAll }: { loading: boolean, materials: ExamMaterial[], publishedExams: PublishedExam[], onPublish: (group: any) => void, onDownloadAll: (materials: ExamMaterial[], academicYear: string, term: string, gradeLevel: string) => void }) {
-    
+
     const organizedMaterials = useMemo(() => {
         const organized: OrganizedMaterials = {};
-        
+
         materials.forEach(material => {
             const { academicYear, term, gradeLevel } = material;
 
@@ -185,7 +180,7 @@ function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDow
             if (!organized[academicYear][term][gradeLevel]) {
                 organized[academicYear][term][gradeLevel] = { materials: [], isPublished: false };
             }
-            
+
             organized[academicYear][term][gradeLevel].materials.push(material);
         });
 
@@ -221,7 +216,7 @@ function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDow
             </Card>
         );
     }
-    
+
     return (
         <Tabs defaultValue={academicYears[0]} className="w-full">
             <TabsList>
@@ -231,16 +226,16 @@ function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDow
                 <TabsContent key={year} value={year} className="mt-4">
                     <Accordion type="single" collapsible className="w-full space-y-4">
                         {Object.keys(organizedMaterials[year]).sort().map(term => (
-                             <AccordionItem value={term} key={term} className="border-none">
+                            <AccordionItem value={term} key={term} className="border-none">
                                 <Card>
                                     <AccordionTrigger className="p-6 font-semibold text-lg">
                                         {term}
                                     </AccordionTrigger>
                                     <AccordionContent className="p-6 pt-0 space-y-4">
-                                         {Object.keys(organizedMaterials[year][term]).sort().map(gradeLevel => {
-                                             const group = organizedMaterials[year][term][gradeLevel];
-                                             const isPublished = group.isPublished;
-                                             return (
+                                        {Object.keys(organizedMaterials[year][term]).sort().map(gradeLevel => {
+                                            const group = organizedMaterials[year][term][gradeLevel];
+                                            const isPublished = group.isPublished;
+                                            return (
                                                 <Card key={gradeLevel}>
                                                     <CardHeader>
                                                         <div className="flex justify-between items-center">
@@ -297,8 +292,8 @@ function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDow
                                                         </Table>
                                                     </CardContent>
                                                 </Card>
-                                             )
-                                         })}
+                                            )
+                                        })}
                                     </AccordionContent>
                                 </Card>
                             </AccordionItem>
@@ -311,260 +306,331 @@ function ExamMaterialsTab({ loading, materials, publishedExams, onPublish, onDow
 }
 
 export default function ExamManagementPage() {
-  const { user } = useUser();
-  const { toast } = useToast();
-  const firestore = useFirestore();
+    const { user } = useUser();
+    const { toast } = useToast();
+    const firestore = useFirestore();
 
-  const [school, setSchool] = useState<School | null>(null);
-  const [notifications, setNotifications] = useState<SchoolNotification[]>([]);
-  const [timetables, setTimetables] = useState<ExamTimetable[]>([]);
-  const [examMaterials, setExamMaterials] = useState<ExamMaterial[]>([]);
-  const [publishedExams, setPublishedExams] = useState<PublishedExam[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTimetable, setSelectedTimetable] = useState<ExamTimetable | null>(null);
-  const [subjectMap, setSubjectMap] = useState<Map<string, string>>(new Map());
-  const [loadingSubjects, setLoadingSubjects] = useState(false);
-  const [isPublishing, setIsPublishing] = useState<Record<string, boolean>>({});
+    const [school, setSchool] = useState<School | null>(null);
+    const [notifications, setNotifications] = useState<SchoolNotification[]>([]);
+    const [timetables, setTimetables] = useState<ExamTimetable[]>([]);
+    const [examMaterials, setExamMaterials] = useState<ExamMaterial[]>([]);
+    const [publishedExams, setPublishedExams] = useState<PublishedExam[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedTimetable, setSelectedTimetable] = useState<ExamTimetable | null>(null);
+    const [subjectMap, setSubjectMap] = useState<Map<string, string>>(new Map());
+    const [loadingSubjects, setLoadingSubjects] = useState(false);
+    const [isPublishing, setIsPublishing] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    if (!firestore || !user?.schoolId) {
-        setLoading(false);
-        return;
-    }
-
-    setLoading(true);
-    const unsubs: (() => void)[] = [];
-
-    // Fetch school data to get schoolLevel
-    unsubs.push(onSnapshot(doc(firestore, 'schools', user.schoolId), (snap) => {
-        if(snap.exists()) setSchool(snap.data() as School);
-    }));
-
-    // Fetch notifications
-    const notifQuery = query(collection(firestore, `schools/${user.schoolId}/notifications`));
-    unsubs.push(onSnapshot(notifQuery, async (snapshot) => {
-        const fetchedNotifications = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as SchoolNotification));
-        setNotifications(fetchedNotifications);
-
-        // Mark as read
-        const unreadNotifs = fetchedNotifications.filter(n => !n.isRead);
-        if (unreadNotifs.length > 0) {
-            const batch = writeBatch(firestore);
-            unreadNotifs.forEach(n => batch.update(doc(firestore, `schools/${user.schoolId}/notifications`, n.id), { isRead: true }));
-            await batch.commit().catch(e => console.error("Failed to mark notifications as read:", e));
+    useEffect(() => {
+        if (!firestore || !user?.schoolId) {
+            setLoading(false);
+            return;
         }
-        
-        // Fetch related timetables and materials
-        const timetableIds = fetchedNotifications.filter(n => n.type === 'timetable' && n.referenceId).map(n => n.referenceId);
-        const materialIds = new Set<string>();
-        fetchedNotifications.filter(n => n.type === 'material' && n.referenceId).forEach(n => materialIds.add(n.referenceId));
 
-        if (timetableIds.length > 0) {
-            const timetablesQuery = query(collection(firestore, 'examTimetables'), where('__name__', 'in', timetableIds));
-            unsubs.push(onSnapshot(timetablesQuery, (snap) => setTimetables(snap.docs.map(d => ({ id: d.id, ...d.data() } as ExamTimetable)))));
+        setLoading(true);
+        const unsubs: (() => void)[] = [];
+
+        // Fetch school data to get schoolLevel
+        unsubs.push(onSnapshot(doc(firestore, 'schools', user.schoolId), (snap) => {
+            if (snap.exists()) setSchool(snap.data() as School);
+        }));
+
+        // Fetch notifications
+        const notifQuery = query(collection(firestore, `schools/${user.schoolId}/notifications`));
+        unsubs.push(onSnapshot(notifQuery, async (snapshot) => {
+            const fetchedNotifications = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as SchoolNotification));
+            setNotifications(fetchedNotifications);
+
+            // Mark as read
+            const unreadNotifs = fetchedNotifications.filter(n => !n.isRead);
+            if (unreadNotifs.length > 0) {
+                const batch = writeBatch(firestore);
+                unreadNotifs.forEach(n => batch.update(doc(firestore, `schools/${user.schoolId}/notifications`, n.id), { isRead: true }));
+                await batch.commit().catch(e => console.error("Failed to mark notifications as read:", e));
+            }
+
+            // Fetch related timetables and materials
+            const timetableIds = fetchedNotifications.filter(n => n.type === 'timetable' && n.referenceId).map(n => n.referenceId);
+            const materialIds = new Set<string>();
+            fetchedNotifications.filter(n => n.type === 'material' && n.referenceId).forEach(n => materialIds.add(n.referenceId));
+
+            if (timetableIds.length > 0) {
+                const timetablesQuery = query(collection(firestore, 'examTimetables'), where('__name__', 'in', timetableIds));
+                unsubs.push(onSnapshot(timetablesQuery, (snap) => setTimetables(snap.docs.map(d => ({ id: d.id, ...d.data() } as ExamTimetable)))));
+            } else {
+                setTimetables([]);
+            }
+
+            if (materialIds.size > 0) {
+                const materialsQuery = query(collection(firestore, 'examMaterials'), where('__name__', 'in', Array.from(materialIds)));
+                unsubs.push(onSnapshot(materialsQuery, (snap) => setExamMaterials(snap.docs.map(d => ({ id: d.id, ...d.data() } as ExamMaterial)))));
+            } else {
+                setExamMaterials([]);
+            }
+
+            setLoading(false);
+        }));
+
+        // Fetch already published exams
+        const publishedExamsQuery = query(collection(firestore, `schools/${user.schoolId}/publishedExams`));
+        unsubs.push(onSnapshot(publishedExamsQuery, (snap) => setPublishedExams(snap.docs.map(d => ({ id: d.id, ...d.data() } as PublishedExam)))));
+
+        return () => unsubs.forEach(unsub => unsub());
+    }, [firestore, user]);
+
+    useEffect(() => {
+        if (!selectedTimetable || selectedTimetable.type !== 'structured' || !firestore) return;
+        setLoadingSubjects(true);
+        const subjectIds = new Set<string>();
+        selectedTimetable.schedule?.forEach(item => {
+            if (item.session1_subjectId) subjectIds.add(item.session1_subjectId);
+            if (item.session1_subjectId2) subjectIds.add(item.session1_subjectId2);
+            if (item.session2_subjectId) subjectIds.add(item.session2_subjectId);
+            if (item.session2_subjectId2) subjectIds.add(item.session2_subjectId2);
+        });
+        if (subjectIds.size > 0) {
+            const q = query(collection(firestore, 'subjects'), where('__name__', 'in', Array.from(subjectIds)));
+            getDocs(q).then(snap => {
+                const newMap = new Map<string, string>();
+                snap.forEach(doc => newMap.set(doc.id, (doc.data() as Subject).name));
+                setSubjectMap(newMap);
+                setLoadingSubjects(false);
+            });
         } else {
-            setTimetables([]);
-        }
-        
-        if (materialIds.size > 0) {
-            const materialsQuery = query(collection(firestore, 'examMaterials'), where('__name__', 'in', Array.from(materialIds)));
-             unsubs.push(onSnapshot(materialsQuery, (snap) => setExamMaterials(snap.docs.map(d => ({ id: d.id, ...d.data() } as ExamMaterial)))));
-        } else {
-            setExamMaterials([]);
-        }
-
-        setLoading(false);
-    }));
-    
-    // Fetch already published exams
-    const publishedExamsQuery = query(collection(firestore, `schools/${user.schoolId}/publishedExams`));
-    unsubs.push(onSnapshot(publishedExamsQuery, (snap) => setPublishedExams(snap.docs.map(d => ({ id: d.id, ...d.data() } as PublishedExam)))));
-
-
-    return () => unsubs.forEach(unsub => unsub());
-  }, [firestore, user]);
-
-  useEffect(() => {
-    if (!selectedTimetable || selectedTimetable.type !== 'structured' || !firestore) return;
-    setLoadingSubjects(true);
-    const subjectIds = new Set<string>();
-    selectedTimetable.schedule?.forEach(item => {
-        if(item.session1_subjectId) subjectIds.add(item.session1_subjectId);
-        if(item.session1_subjectId2) subjectIds.add(item.session1_subjectId2);
-        if(item.session2_subjectId) subjectIds.add(item.session2_subjectId);
-        if(item.session2_subjectId2) subjectIds.add(item.session2_subjectId2);
-    });
-    if (subjectIds.size > 0) {
-        const q = query(collection(firestore, 'subjects'), where('__name__', 'in', Array.from(subjectIds)));
-        getDocs(q).then(snap => {
-            const newMap = new Map<string, string>();
-            snap.forEach(doc => newMap.set(doc.id, (doc.data() as Subject).name));
-            setSubjectMap(newMap);
             setLoadingSubjects(false);
-        });
-    } else {
-        setLoadingSubjects(false);
-    }
-  }, [selectedTimetable, firestore]);
-
-  const viewTimetable = (timetable: ExamTimetable) => {
-    if (timetable.type === 'file' && timetable.fileUrl) {
-      window.open(`/api/downloadFile?filePath=${encodeURIComponent(timetable.fileUrl)}`, '_blank');
-    } else {
-      setSelectedTimetable(timetable);
-    }
-  };
-
-  const handlePublishExams = async (group: { academicYear: string, term: string, gradeLevel: string }) => {
-      if (!user?.schoolId || !school?.schoolType) {
-          toast({ variant: 'destructive', title: 'Error', description: 'User or school data is missing.' });
-          return;
-      }
-      const periodKey = `${group.academicYear}-${group.term}-${group.gradeLevel}`;
-      setIsPublishing(prev => ({...prev, [periodKey]: true}));
-      try {
-          const idToken = await auth.currentUser?.getIdToken();
-          if (!idToken) throw new Error("Authentication failed.");
-
-          const result = await publishExamsToTeachers({
-              schoolId: user.schoolId,
-              academicYear: group.academicYear,
-              term: group.term,
-              schoolLevel: school.schoolType,
-              gradeLevel: group.gradeLevel
-          }, idToken);
-
-          if (result.success) {
-              toast({title: 'Success', description: 'Exams have been published to teachers.'});
-          } else {
-              throw new Error(result.message);
-          }
-      } catch (error: any) {
-          toast({variant: 'destructive', title: 'Error', description: error.message});
-      } finally {
-           setIsPublishing(prev => ({...prev, [periodKey]: false}));
-      }
-  };
-  
-  const handleDownloadAll = useCallback(async (materials: ExamMaterial[], academicYear: string, term: string, gradeLevel: string) => {
-    if (materials.length === 0) return;
-
-    toast({
-      title: 'Preparing Download',
-      description: 'Zipping files... please wait.',
-    });
-
-    try {
-        const filePaths = materials.map(m => m.fileUrl);
-        const result = await downloadAndZipFiles(filePaths);
-
-        if (result.success && result.data) {
-            const blob = new Blob([Buffer.from(result.data, 'base64')], { type: 'application/zip' });
-            const fileName = `${academicYear}_${term}_${gradeLevel}_Exams.zip`.replace(/\s/g, '_');
-            saveAs(blob, fileName);
-        } else {
-            throw new Error(result.message || "Failed to create ZIP file on server.");
         }
-    } catch (error: any) {
-        console.error("Error creating ZIP file:", error);
+    }, [selectedTimetable, firestore]);
+
+    const viewTimetable = (timetable: ExamTimetable) => {
+        if (timetable.type === 'file' && timetable.fileUrl) {
+            window.open(`/api/downloadFile?filePath=${encodeURIComponent(timetable.fileUrl)}`, '_blank');
+        } else {
+            setSelectedTimetable(timetable);
+        }
+    };
+
+    const handlePublishExams = async (group: { academicYear: string, term: string, gradeLevel: string }) => {
+        if (!user?.schoolId || !school?.schoolType) {
+            toast({ variant: 'destructive', title: 'Error', description: 'User or school data is missing.' });
+            return;
+        }
+        const periodKey = `${group.academicYear}-${group.term}-${group.gradeLevel}`;
+        setIsPublishing(prev => ({ ...prev, [periodKey]: true }));
+        try {
+            const idToken = await auth.currentUser?.getIdToken();
+            if (!idToken) throw new Error("Authentication failed.");
+
+            const result = await publishExamsToTeachers({
+                schoolId: user.schoolId,
+                academicYear: group.academicYear,
+                term: group.term,
+                schoolLevel: school.schoolType,
+                gradeLevel: group.gradeLevel
+            }, idToken);
+
+            if (result.success) {
+                toast({ title: 'Success', description: 'Exams have been published to teachers.' });
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error: any) {
+            toast({ variant: 'destructive', title: 'Error', description: error.message });
+        } finally {
+            setIsPublishing(prev => ({ ...prev, [periodKey]: false }));
+        }
+    };
+
+    const handleDownloadAll = useCallback(async (materials: ExamMaterial[], academicYear: string, term: string, gradeLevel: string) => {
+        if (materials.length === 0) return;
+
         toast({
-            variant: 'destructive',
-            title: 'Download Failed',
-            description: error.message || 'Could not create ZIP file.',
+            title: 'Preparing Download',
+            description: 'Zipping files... please wait.',
         });
+
+        try {
+            const filePaths = materials.map(m => m.fileUrl);
+            const result = await downloadAndZipFiles(filePaths);
+
+            if (result.success && result.data) {
+                const blob = new Blob([Buffer.from(result.data, 'base64')], { type: 'application/zip' });
+                const fileName = `${academicYear}_${term}_${gradeLevel}_Exams.zip`.replace(/\s/g, '_');
+                saveAs(blob, fileName);
+            } else {
+                throw new Error(result.message || "Failed to create ZIP file on server.");
+            }
+        } catch (error: any) {
+            console.error("Error creating ZIP file:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Download Failed',
+                description: error.message || 'Could not create ZIP file.',
+            });
+        }
+    }, [toast]);
+
+    const handlePrint = () => {
+        window.print();
     }
-  }, [toast]);
 
+    return (
+        <>
+            {selectedTimetable && (
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+        @media print {
+          @page { size: landscape; margin: 12mm; }
 
-  const handlePrint = () => {
-    window.print();
-  }
-  
-  return (
-    <>
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Exam Management</h2>
-          <p className="text-muted-foreground mb-6">
-            View and download exam timetables and materials published by your Sub-Region Admin.
-          </p>
-        </div>
-      </div>
-      
-      <Tabs defaultValue="timetables" className="w-full">
-        <TabsList>
-          <TabsTrigger value="timetables">Timetables</TabsTrigger>
-          <TabsTrigger value="materials">Exam Materials</TabsTrigger>
-        </TabsList>
-        <TabsContent value="timetables" className="mt-4">
-            <TimetablesTab timetables={timetables} loading={loading} viewTimetable={viewTimetable} />
-        </TabsContent>
-        <TabsContent value="materials" className="mt-4">
-            <ExamMaterialsTab loading={loading} materials={examMaterials} publishedExams={publishedExams} onPublish={handlePublishExams} onDownloadAll={handleDownloadAll} />
-        </TabsContent>
-      </Tabs>
-    </div>
-    
-    <Dialog open={!!selectedTimetable} onOpenChange={() => setSelectedTimetable(null)}>
-        <DialogContent className="max-w-4xl printable-area">
-            <div>
-                <DialogHeader>
-                    <DialogTitle>Timetable for {selectedTimetable?.academicYear}, {selectedTimetable?.term}</DialogTitle>
-                    <DialogDescription>{selectedTimetable?.schoolLevel}</DialogDescription>
-                </DialogHeader>
-                {loadingSubjects ? (
-                     <div className="flex justify-center p-10"><Loader2 className="h-8 w-8 animate-spin" /></div>
-                ) : (
-                    <div className="max-h-[60vh] overflow-y-auto mt-4 print:max-h-none print:overflow-visible">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Session 1</TableHead>
-                                    <TableHead>Session 2</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {selectedTimetable?.schedule?.map(item => (
-                                    <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{format(new Date(item.date), 'EEE, PPP')}</TableCell>
-                                        <TableCell>
-                                            {(item.session1_subjectId || item.session1_subjectId2) ? (
-                                                <>
-                                                    <p className="font-semibold">{subjectMap.get(item.session1_subjectId!) || item.session1_subjectId}</p>
-                                                    {item.session1_subjectId2 && <p className="font-semibold text-muted-foreground">& {subjectMap.get(item.session1_subjectId2) || item.session1_subjectId2}</p>}
-                                                    <p className="text-sm text-muted-foreground">{item.session1_time}</p>
-                                                    {item.session1_subject1_comments && <p className="text-xs italic mt-1">"{item.session1_subject1_comments}"</p>}
-                                                    {item.session1_subject2_comments && <p className="text-xs italic mt-1">"{item.session1_subject2_comments}"</p>}
-                                                </>
-                                            ) : null}
-                                        </TableCell>
-                                         <TableCell>
-                                             {(item.session2_subjectId || item.session2_subjectId2) ? (
-                                                <>
-                                                    <p className="font-semibold">{subjectMap.get(item.session2_subjectId!) || item.session2_subjectId}</p>
-                                                    {item.session2_subjectId2 && <p className="font-semibold text-muted-foreground">& {subjectMap.get(item.session2_subjectId2) || item.session2_subjectId2}</p>}
-                                                    <p className="text-sm text-muted-foreground">{item.session2_time}</p>
-                                                    {item.session2_subject1_comments && <p className="text-xs italic mt-1">"{item.session2_subject1_comments}"</p>}
-                                                    {item.session2_subject2_comments && <p className="text-xs italic mt-1">"{item.session2_subject2_comments}"</p>}
-                                                </>
-                                            ) : null}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+          /* Hide ALL elements in the body to remove backgrounds/blank space */
+          body * {
+            visibility: hidden !important;
+          }
+
+          /* Ensure the portal container allows its children to be positioned */
+          [data-radix-portal] {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            overflow: visible !important;
+          }
+
+          /* Make ONLY the printable area and its content visible */
+          .printable-area, .printable-area * {
+            visibility: visible !important;
+          }
+
+          /* Reset positioning for the DialogContent to snap to top-left */
+          .printable-area {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            transform: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+
+          /* EXPLICITLY HIDE the Shadcn close button (the "X") */
+          .printable-area > button {
+            display: none !important;
+            visibility: hidden !important;
+          }
+
+          /* Hide footer/print button */
+          .printable-hidden, .printable-hidden * {
+            display: none !important;
+            visibility: hidden !important;
+          }
+
+          /* Allow scrolling container to expand to full content height */
+          .printable-area div.overflow-y-auto {
+            max-height: none !important;
+            overflow: visible !important;
+          }
+
+          /* Table and typography formatting */
+          .printable-area table { width: 100% !important; border-collapse: collapse !important; margin-top: 1.5rem !important; }
+          .printable-area th, .printable-area td { border: 1px solid #e2e8f0 !important; padding: 10px 14px !important; text-align: left !important; vertical-align: top !important; }
+          .printable-area th { background-color: #f8fafc !important; color: #0f172a !important; font-weight: 700 !important; font-size: 0.9rem !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; }
+          .printable-area td { font-size: 0.85rem !important; color: #334155 !important; line-height: 1.6 !important; }
+          .printable-area tr { page-break-inside: avoid !important; }
+          
+          .dialog-header-print { break-after: avoid !important; margin-bottom: 1rem !important; }
+          .printable-content { break-inside: avoid !important; }
+        }
+      `}} />
+            )}
+            <div className="space-y-6">
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h2 className="text-3xl font-bold tracking-tight">Exam Management</h2>
+                        <p className="text-muted-foreground mb-6">
+                            View and download exam timetables and materials published by your Sub-Region Admin.
+                        </p>
                     </div>
-                )}
+                </div>
+
+                <Tabs defaultValue="timetables" className="w-full">
+                    <TabsList>
+                        <TabsTrigger value="timetables">Timetables</TabsTrigger>
+                        <TabsTrigger value="materials">Exam Materials</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="timetables" className="mt-4">
+                        <TimetablesTab timetables={timetables} loading={loading} viewTimetable={viewTimetable} />
+                    </TabsContent>
+                    <TabsContent value="materials" className="mt-4">
+                        <ExamMaterialsTab loading={loading} materials={examMaterials} publishedExams={publishedExams} onPublish={handlePublishExams} onDownloadAll={handleDownloadAll} />
+                    </TabsContent>
+                </Tabs>
             </div>
-            <DialogFooter className="printable-hidden">
-                <Button variant="outline" onClick={handlePrint}>
-                    <Printer className="mr-2 h-4 w-4" /> Print
-                </Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
-    </>
-  );
+
+            <Dialog open={!!selectedTimetable} onOpenChange={() => setSelectedTimetable(null)}>
+                <DialogContent className="max-w-4xl printable-area">
+                    <div className="dialog-header-print">
+                        <DialogHeader>
+                            <DialogTitle>Timetable for {selectedTimetable?.academicYear}, {selectedTimetable?.term}</DialogTitle>
+                            <DialogDescription>{selectedTimetable?.schoolLevel}</DialogDescription>
+                        </DialogHeader>
+                    </div>
+
+                    <div className="printable-content">
+                        {loadingSubjects ? (
+                            <div className="flex justify-center p-10"><Loader2 className="h-8 w-8 animate-spin" /></div>
+                        ) : (
+                            <div className="max-h-[60vh] overflow-y-auto mt-4 print:max-h-none print:overflow-visible">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Session 1</TableHead>
+                                            <TableHead>Session 2</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {selectedTimetable?.schedule?.map(item => (
+                                            <TableRow key={item.id}>
+                                                <TableCell className="font-medium">{format(new Date(item.date), 'EEE, PPP')}</TableCell>
+                                                <TableCell>
+                                                    {(item.session1_subjectId || item.session1_subjectId2) ? (
+                                                        <>
+                                                            <p className="font-semibold">{subjectMap.get(item.session1_subjectId!) || item.session1_subjectId}</p>
+                                                            {item.session1_subjectId2 && <p className="font-semibold text-muted-foreground">& {subjectMap.get(item.session1_subjectId2) || item.session1_subjectId2}</p>}
+                                                            <p className="text-sm text-muted-foreground">{item.session1_time}</p>
+                                                            {item.session1_subject1_comments && <p className="text-xs italic mt-1">"{item.session1_subject1_comments}"</p>}
+                                                            {item.session1_subject2_comments && <p className="text-xs italic mt-1">"{item.session1_subject2_comments}"</p>}
+                                                        </>
+                                                    ) : null}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {(item.session2_subjectId || item.session2_subjectId2) ? (
+                                                        <>
+                                                            <p className="font-semibold">{subjectMap.get(item.session2_subjectId!) || item.session2_subjectId}</p>
+                                                            {item.session2_subjectId2 && <p className="font-semibold text-muted-foreground">& {subjectMap.get(item.session2_subjectId2) || item.session2_subjectId2}</p>}
+                                                            <p className="text-sm text-muted-foreground">{item.session2_time}</p>
+                                                            {item.session2_subject1_comments && <p className="text-xs italic mt-1">"{item.session2_subject1_comments}"</p>}
+                                                            {item.session2_subject2_comments && <p className="text-xs italic mt-1">"{item.session2_subject2_comments}"</p>}
+                                                        </>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter className="printable-hidden">
+                        <Button variant="outline" onClick={handlePrint}>
+                            <Printer className="mr-2 h-4 w-4" /> Print
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
 }

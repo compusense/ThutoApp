@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thuto — School Head Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0c1a14;
+  --ink-soft:#2e4a3a;
+  --ink-muted:#6b8a78;
+  --cream:#f7f5f0;
+  --cream2:#ede9df;
+  --white:#ffffff;
+  --teal:#0a9e6e;
+  --teal2:#07c98c;
+  --teal-dark:#065e42;
+  --teal-light:#d8f5eb;
+  --gold:#c47d1a;
+  --gold-light:#fef3dd;
+  --rose:#c4436a;
+  --rose-light:#fdedf3;
+  --blue:#1a5fc4;
+  --blue-light:#deeeff;
+  --border:rgba(12,26,20,0.1);
+  --shadow:0 2px 12px rgba(12,26,20,0.08);
+  --shadow-md:0 4px 20px rgba(12,26,20,0.10);
+  --shadow-lg:0 12px 48px rgba(12,26,20,0.15);
+  --r:12px;
+  --r2:18px;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+
+html,body{height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--ink);display:flex;line-height:1.5;cursor:default}
+
+/* ─── CUSTOM CURSOR (matching index) ─── */
+#cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--teal);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s,opacity .2s;mix-blend-mode:multiply}
+#cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--teal);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .35s var(--ease),height .35s var(--ease),border-color .3s;opacity:.6}
+body:hover #cursor{opacity:1}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  width:260px;flex-shrink:0;
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  height:100vh;overflow-y:auto;
+  position:relative;z-index:10;
+  backdrop-filter:blur(0px);
+}
+.sidebar::-webkit-scrollbar{width:0}
+.sb-header{padding:28px 20px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:20px}
+.sb-orb{width:34px;height:34px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:white;flex-shrink:0;position:relative;overflow:hidden}
+.sb-orb::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--teal-dark);opacity:.3}
+.sb-wordmark{font-family:'DM Serif Display',serif;font-size:1.45rem;color:white}
+.sb-school{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border-radius:14px;padding:10px 12px;cursor:pointer;transition:background .2s}
+.sb-school:hover{background:rgba(255,255,255,.1)}
+.sb-school-name{font-size:.85rem;font-weight:700;color:white;margin-bottom:2px}
+.sb-school-meta{font-size:.7rem;color:rgba(255,255,255,.35)}
+.sb-school-arrow{margin-left:auto;color:rgba(255,255,255,.25);font-size:.75rem}
+.sb-section{padding:16px 16px 6px;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.sb-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;margin:2px 12px;
+  border-radius:12px;cursor:pointer;
+  text-decoration:none;
+  transition:all .2s var(--ease);
+  font-size:.85rem;font-weight:500;color:rgba(255,255,255,.55);
+}
+.sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.sb-item.active{background:var(--teal);color:white}
+.sb-item.active .sb-icon{opacity:1}
+.sb-icon{font-size:1.1rem;opacity:.6;width:22px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--rose);color:white;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px}
+.sb-footer{margin-top:auto;padding:20px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-user{display:flex;align-items:center;gap:12px;padding:8px;border-radius:12px;cursor:pointer;transition:background .2s}
+.sb-user:hover{background:rgba(255,255,255,.07)}
+.sb-avatar{width:40px;height:40px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:white;flex-shrink:0}
+.sb-uname{font-size:.85rem;font-weight:600;color:rgba(255,255,255,.85)}
+.sb-urole{font-size:.7rem;color:rgba(255,255,255,.35)}
+
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;height:100vh;overflow:hidden;background:var(--cream)}
+
+/* ─── TOPBAR ─── */
+.topbar{
+  height:70px;flex-shrink:0;
+  background:rgba(247,245,240,0.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 32px;gap:24px;
+  position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--ink);flex:1}
+.topbar-title span{color:var(--teal);font-style:italic}
+.tb-search{
+  display:flex;align-items:center;gap:10px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:40px;padding:8px 18px;
+  font-size:.85rem;color:var(--ink-muted);
+  width:240px;transition:all .3s var(--ease);
+  box-shadow:var(--shadow);
+}
+.tb-search:focus-within{border-color:var(--teal);width:280px;box-shadow:0 0 0 3px rgba(10,158,110,.1)}
+.tb-search input{background:none;border:none;outline:none;font-size:.85rem;color:var(--ink);font-family:inherit;width:100%}
+.tb-search input::placeholder{color:var(--ink-muted)}
+.tb-pills{display:flex;gap:10px}
+.tb-pill{
+  padding:6px 18px;border-radius:40px;
+  font-size:.75rem;font-weight:700;
+  border:1px solid var(--border);background:white;
+  cursor:pointer;transition:all .2s;color:var(--ink-muted);
+}
+.tb-pill.active,.tb-pill:hover{background:var(--ink);color:white;border-color:var(--ink)}
+.tb-icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:white;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;cursor:pointer;transition:all .2s;position:relative;
+}
+.tb-icon-btn:hover{background:var(--teal-light);border-color:var(--teal);transform:translateY(-1px)}
+.tb-notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--rose);border:2px solid var(--white)}
+
+/* ─── CANVAS ─── */
+.canvas{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:24px}
+.canvas::-webkit-scrollbar{width:5px}
+.canvas::-webkit-scrollbar-track{background:transparent}
+.canvas::-webkit-scrollbar-thumb{background:rgba(12,26,20,.15);border-radius:10px}
+
+/* ─── KPI ROW (glassmorphic style) ─── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.kpi{
+  background:white;border-radius:20px;padding:20px 20px 16px;
+  border:1px solid var(--border);
+  transition:all .3s var(--ease);
+  cursor:default;position:relative;
+  backdrop-filter:blur(0px);
+  box-shadow:0 1px 2px rgba(0,0,0,.02);
+}
+.kpi:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(10,158,110,.2)}
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.kpi-icon{width:44px;height:44px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.kpi-trend{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:40px}
+.kpi-trend.up{background:var(--teal-light);color:var(--teal-dark)}
+.kpi-trend.down{background:var(--rose-light);color:var(--rose)}
+.kpi-trend.flat{background:var(--cream2);color:var(--ink-muted)}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:2.2rem;line-height:1;color:var(--ink);margin-bottom:5px}
+.kpi-label{font-size:.75rem;color:var(--ink-muted);font-weight:600;letter-spacing:.02em}
+.kpi-sparkline{height:30px;margin-top:10px}
+
+/* ─── CARDS (modern, soft) ─── */
+.card{background:white;border-radius:24px;border:1px solid var(--border);padding:24px 28px;overflow:hidden;transition:all .3s var(--ease);box-shadow:0 2px 6px rgba(0,0,0,.02)}
+.card:hover{box-shadow:var(--shadow-md);border-color:rgba(10,158,110,.15)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.card-title{font-size:.9rem;font-weight:800;color:var(--ink);letter-spacing:-.2px}
+.card-sub{font-size:.72rem;color:var(--ink-muted);margin-top:3px;font-weight:500}
+.card-pill{
+  font-size:.7rem;font-weight:600;padding:5px 14px;border-radius:40px;
+  cursor:pointer;border:1px solid var(--border);color:var(--ink-muted);
+  background:var(--cream);transition:all .2s;
+}
+.card-pill.active,.card-pill:hover{background:var(--ink);color:white;border-color:var(--ink)}
+
+/* ─── SUBJECT TABLE ─── */
+.subj-table{width:100%;border-collapse:collapse}
+.subj-table th{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-muted);padding:0 0 12px;text-align:left;border-bottom:1.5px solid var(--border)}
+.subj-table th:last-child,.subj-table td:last-child{text-align:right}
+.subj-table td{padding:12px 0;font-size:.82rem;border-bottom:1px solid rgba(12,26,20,.05);vertical-align:middle}
+.subj-name{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink)}
+.pass-bar-wrap{height:6px;background:var(--cream2);border-radius:4px;width:80px;overflow:hidden}
+.pass-bar{height:100%;border-radius:4px;transition:width 1.2s var(--ease)}
+
+/* ─── ALERTS & ACTIVITY (vibrant) ─── */
+.alert-list{display:flex;flex-direction:column;gap:10px}
+.alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:18px;font-size:.8rem;line-height:1.5;border:1px solid;transition:transform .2s}
+.alert:hover{transform:translateX(4px)}
+.alert.warn{background:var(--gold-light);border-color:rgba(196,125,26,.3);color:#7a4a00}
+.alert.danger{background:var(--rose-light);border-color:rgba(196,67,106,.3);color:#7a0030}
+.alert.info{background:var(--blue-light);border-color:rgba(26,95,196,.25);color:#0a2f6e}
+.alert.success{background:var(--teal-light);border-color:rgba(10,158,110,.3);color:var(--teal-dark)}
+.act-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:6px}
+.act-text{font-size:.82rem;color:var(--ink-soft);line-height:1.5}
+.act-time{margin-left:auto;font-size:.7rem;color:var(--ink-muted)}
+
+/* ─── TEACHER CARDS ─── */
+.teacher-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.teacher-card{
+  background:var(--cream);border-radius:20px;padding:16px;
+  border:1px solid transparent;transition:all .25s var(--ease);cursor:default;
+}
+.teacher-card:hover{background:white;border-color:var(--border);transform:translateY(-3px);box-shadow:var(--shadow)}
+.tc-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:white;margin-bottom:10px}
+.tc-name{font-size:.85rem;font-weight:800;color:var(--ink);margin-bottom:2px}
+.tc-subj{font-size:.7rem;color:var(--ink-muted);margin-bottom:10px}
+
+/* ─── EXAM & HEATMAP STYLES ─── */
+.exam-item{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--cream);border-radius:18px;border:1px solid var(--border);transition:all .2s}
+.exam-item:hover{background:white;border-color:var(--teal);transform:translateX(5px)}
+.exam-icon{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.exam-days{font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:40px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;margin-top:8px}
+.hm-cell{aspect-ratio:1;border-radius:6px;transition:transform .2s,filter .2s;cursor:pointer}
+.hm-cell:hover{transform:scale(1.2);filter:brightness(1.05);z-index:2;position:relative}
+.grade-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.grade-bar-wrap{flex:1;height:8px;background:var(--cream2);border-radius:20px;overflow:hidden}
+.grade-bar{height:100%;border-radius:20px;transition:width 1.4s var(--ease)}
+
+/* ─── LAYOUT GRIDS ─── */
+.row2{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.row-half{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.donut-wrap{display:flex;align-items:center;gap:28px}
+.dl-item{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+/* ─── ANIMATION ─── */
+@keyframes fadeSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.kpi,.card{opacity:0;animation:fadeSlide .5s var(--ease) forwards}
+.kpi:nth-child(1){animation-delay:.02s}.kpi:nth-child(2){animation-delay:.06s}
+.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.14s}
+.kpi:nth-child(5){animation-delay:.18s}
+.card{animation-delay:.25s}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor (matching index) -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<aside class="sidebar">
+  <div class="sb-header">
+    <a href="#" class="sb-brand">
+      <div class="sb-orb">T</div>
+      <span class="sb-wordmark">Thuto</span>
+    </a>
+    <div class="sb-school">
+      <div style="width:32px;height:32px;border-radius:12px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:white">GH</div>
+      <div>
+        <div class="sb-school-name">Gaborone High</div>
+        <div class="sb-school-meta">Region 1 · 1,247 students</div>
+      </div>
+      <div class="sb-school-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item active" href="#"><span class="sb-icon">📊</span>Dashboard</a>
+  <a class="sb-item" href="#"><span class="sb-icon">👥</span>Students<span class="sb-badge">12</span></a>
+  <a class="sb-item" href="#"><span class="sb-icon">📚</span>Classes</a>
+  <a class="sb-item" href="#"><span class="sb-icon">👩‍🏫</span>Teachers</a>
+  <a class="sb-item" href="#"><span class="sb-icon">🤖</span>AI Lesson Plans</a>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-avatar">MK</div>
+      <div>
+        <div class="sb-uname">M. Kgosi</div>
+        <div class="sb-urole">School Head</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Good morning, <span>Principal Kgosi</span> 👋</div>
+    <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search students, classes…"></div>
+    <div class="tb-pills"><div class="tb-pill active">Term 2</div><div class="tb-pill">2026</div></div>
+    <div class="tb-icon-btn">📥</div>
+    <div class="tb-icon-btn" style="position:relative">🔔<span class="tb-notif-dot"></span></div>
+    <div style="width:38px;height:38px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:white">MK</div>
+  </div>
+
+  <div class="canvas">
+    <!-- KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:var(--teal-light)">👩‍🎓</div><div class="kpi-trend up">↑ 4.2%</div></div><div class="kpi-val">1,247</div><div class="kpi-label">Total Students</div><canvas class="kpi-sparkline" id="sp1"></canvas></div>
+      <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:var(--blue-light)">📊</div><div class="kpi-trend up">↑ 2.1%</div></div><div class="kpi-val">94.2%</div><div class="kpi-label">Overall Pass Rate</div><canvas class="kpi-sparkline" id="sp2"></canvas></div>
+      <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:var(--gold-light)">📅</div><div class="kpi-trend down">↓ 1.3%</div></div><div class="kpi-val">87.6%</div><div class="kpi-label">Attendance Rate</div><canvas class="kpi-sparkline" id="sp3"></canvas></div>
+      <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:var(--rose-light)">👩‍🏫</div><div class="kpi-trend flat">→ 0%</div></div><div class="kpi-val">64</div><div class="kpi-label">Teaching Staff</div><canvas class="kpi-sparkline" id="sp4"></canvas></div>
+      <div class="kpi"><div class="kpi-top"><div class="kpi-icon" style="background:var(--teal-light)">🏆</div><div class="kpi-trend up">↑ 6.8%</div></div><div class="kpi-val">68.4</div><div class="kpi-label">Avg Score</div><canvas class="kpi-sparkline" id="sp5"></canvas></div>
+    </div>
+
+    <div class="row2">
+      <div class="card"><div class="card-header"><div><div class="card-title">Enrollment & Pass Rate Trend</div><div class="card-sub">Students enrolled vs passing — Term 1–3 over 3 years</div></div><div class="card-menu"><div class="card-pill active" onclick="switchTrend(this,'3y')">3Y</div><div class="card-pill" onclick="switchTrend(this,'1y')">1Y</div></div></div><div class="chart-wrap" style="height:210px"><canvas id="enrollChart"></canvas></div></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Student Composition</div><div class="card-sub">By grade group this term</div></div></div><div class="donut-wrap"><div style="width:130px;height:130px"><canvas id="donutChart"></canvas></div><div class="donut-legend"><div class="dl-item"><div class="dl-dot" style="background:#0a9e6e"></div><div class="dl-label">Grade 8–9</div><div class="dl-val">438</div></div><div class="dl-item"><div class="dl-dot" style="background:#1a5fc4"></div><div class="dl-label">Grade 10–11</div><div class="dl-val">412</div></div><div class="dl-item"><div class="dl-dot" style="background:#c47d1a"></div><div class="dl-label">Grade 12</div><div class="dl-val">247</div></div><div class="dl-item"><div class="dl-dot" style="background:#c4436a"></div><div class="dl-label">Special needs</div><div class="dl-val">150</div></div></div></div></div>
+    </div>
+
+    <div class="row3">
+      <div class="card"><div class="card-header"><div><div class="card-title">Subject Performance</div><div class="card-sub">Average marks · current term</div></div></div><div class="chart-wrap" style="height:200px"><canvas id="radarChart"></canvas></div></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Attendance Heatmap</div><div class="card-sub">Daily rate — last 12 weeks</div></div></div><div class="hm-labels" id="hmLabels"></div><div class="heatmap-grid" id="heatmap"></div><div class="hm-legend" style="display:flex;gap:10px;margin-top:12px;font-size:.7rem"><span>Low</span><div style="display:flex;gap:3px"><div style="width:12px;height:12px;background:#f0ede6;border-radius:3px"></div><div style="width:12px;height:12px;background:#a3dfc8;border-radius:3px"></div><div style="width:12px;height:12px;background:#5dbfa3;border-radius:3px"></div><div style="width:12px;height:12px;background:#1d9e75;border-radius:3px"></div><div style="width:12px;height:12px;background:#065e42;border-radius:3px"></div></div><span>High</span></div></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Alerts & Notices</div><div class="card-sub">Requires your attention</div></div></div><div class="alert-list"><div class="alert danger"><div class="alert-icon">⚠️</div>3 students in Grade 12 have attendance below 60% this term. Intervention required.</div><div class="alert warn"><div class="alert-icon">📝</div>Mathematics marks for Grade 10B not yet submitted. Due in 2 days.</div><div class="alert success"><div class="alert-icon">✅</div>Grade 12 mock results uploaded. 91% pass rate — up from last term!</div></div></div>
+    </div>
+
+    <div class="row2">
+      <div class="card"><div class="card-header"><div><div class="card-title">Grade Distribution by Subject</div><div class="card-sub">Stacked pass/fail breakdown · Grade 12</div></div></div><div style="height:220px"><canvas id="barChart"></canvas></div></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Upcoming Exams</div><div class="card-sub">Term 2 schedule</div></div></div><div class="exam-list"><div class="exam-item"><div class="exam-icon" style="background:var(--rose-light)">📐</div><div><div class="exam-name">Mathematics P1 & P2</div><div class="exam-date">Mon 2 Jun 2026 · Grade 12</div></div><div class="exam-days soon" style="background:var(--rose-light);color:var(--rose)">4 days</div></div><div class="exam-item"><div class="exam-icon" style="background:var(--blue-light)">🔬</div><div><div class="exam-name">Physical Science</div><div class="exam-date">Wed 4 Jun 2026 · Grade 11</div></div><div class="exam-days mid" style="background:var(--gold-light);color:var(--gold)">6 days</div></div><div class="exam-item"><div class="exam-icon" style="background:var(--teal-light)">📖</div><div><div class="exam-name">English Language</div><div class="exam-date">Fri 6 Jun 2026 · All grades</div></div><div class="exam-days ok" style="background:var(--teal-light);color:var(--teal-dark)">8 days</div></div></div></div>
+    </div>
+
+    <div class="row3">
+      <div class="card"><div class="card-header"><div><div class="card-title">Subject Marks Overview</div><div class="card-sub">Grade 12 · current term avg</div></div></div><table class="subj-table"><thead><tr><th>Subject</th><th>Avg</th><th>Pass %</th></tr></thead><tbody id="subjBody"></tbody></table></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Score Band Distribution</div><div class="card-sub">All students · Term 2</div></div></div><div id="gradeBands"></div><div style="height:140px;margin-top:12px"><canvas id="lineChart"></canvas></div></div>
+      <div class="card"><div class="card-header"><div><div class="card-title">Recent Activity</div><div class="card-sub">Last 24 hours</div></div></div><div class="activity-list" id="activityList"></div></div>
+    </div>
+
+    <div class="card"><div class="card-header"><div><div class="card-title">Teaching Staff — Performance Snapshot</div><div class="card-sub">Class averages & AI engagement · Term 2</div></div></div><div class="teacher-grid" id="teacherGrid"></div></div>
+  </div>
+</div>
+
+<script>
+// Cursor interaction matching index style
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+document.querySelectorAll('.sb-item, .tb-pill, .tb-icon-btn, .kpi, .card, .exam-item, .teacher-card, .alert').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='var(--teal2)';ring.style.width='56px';ring.style.height='56px'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='12px';cur.style.height='12px';cur.style.background='var(--teal)';ring.style.width='36px';ring.style.height='36px'});
+});
+
+// Sparklines
+function sparkline(id, data, color){
+  const c=document.getElementById(id); if(!c) return;
+  new Chart(c,{type:'line',data:{labels:data.map((_,i)=>i),datasets:[{data,borderColor:color,borderWidth:2,pointRadius:0,tension:.4,fill:true,backgroundColor:color.replace(')',', 0.08)']})},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+}
+sparkline('sp1',[1100,1150,1180,1200,1220,1240,1247],'#0a9e6e');
+sparkline('sp2',[88,89,90,92,92.5,93.8,94.2],'#1a5fc4');
+sparkline('sp3',[91,90,89,88.5,88,87.8,87.6],'#c47d1a');
+sparkline('sp4',[64,64,64,64,64,64,64],'#c4436a');
+sparkline('sp5',[60,62,63,65,66,67.5,68.4],'#0a9e6e');
+
+// Enroll Chart
+const enrollCtx=document.getElementById('enrollChart').getContext('2d');
+const enrollChart=new Chart(enrollCtx,{type:'line',data:{labels:['T1 \'24','T2 \'24','T3 \'24','T1 \'25','T2 \'25','T3 \'25','T1 \'26','T2 \'26'],datasets:[{label:'Enrolled',data:[1050,1080,1090,1120,1150,1180,1230,1247],borderColor:'#0a9e6e',backgroundColor:'rgba(10,158,110,.1)',borderWidth:2,pointRadius:3,tension:.4,fill:true},{label:'Passing',data:[920,960,975,1010,1060,1095,1155,1175],borderColor:'#1a5fc4',backgroundColor:'rgba(26,95,196,.1)',borderWidth:2,pointRadius:3,tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:11,family:'Plus Jakarta Sans'}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(12,26,20,.05)'}}}}});
+window.switchTrend=function(btn,range){document.querySelectorAll('.card-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');const sets={'3y':{labels:['T1 \'24','T2 \'24','T3 \'24','T1 \'25','T2 \'25','T3 \'25','T1 \'26','T2 \'26'],e:[1050,1080,1090,1120,1150,1180,1230,1247],p:[920,960,975,1010,1060,1095,1155,1175]},'1y':{labels:['T1 \'25','T2 \'25','T3 \'25','T1 \'26','T2 \'26'],e:[1120,1150,1180,1230,1247],p:[1010,1060,1095,1155,1175]}};const d=sets[range];enrollChart.data.labels=d.labels;enrollChart.data.datasets[0].data=d.e;enrollChart.data.datasets[1].data=d.p;enrollChart.update()};
+
+new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{datasets:[{data:[438,412,247,150],backgroundColor:['#0a9e6e','#1a5fc4','#c47d1a','#c4436a'],borderWidth:0,hoverOffset:8}]},options:{cutout:'68%',responsive:true,maintainAspectRatio:true,plugins:{tooltip:{enabled:false}}}});
+new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels:['Maths','English','Science','Geography','History','Accounting'],datasets:[{label:'Grade 12',data:[68,74,71,66,78,72],borderColor:'#0a9e6e',backgroundColor:'rgba(10,158,110,.15)',borderWidth:2},{label:'Grade 11',data:[61,70,65,70,72,65],borderColor:'#1a5fc4',backgroundColor:'rgba(26,95,196,.1)',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{r:{ticks:{display:false},pointLabels:{font:{size:9}}}}});
+new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:['Maths','English','Science','Geo','History','Accounting'],datasets:[{label:'Distinction',data:[18,32,22,28,35,24],backgroundColor:'#0a9e6e',borderRadius:6},{label:'Pass',data:[45,38,44,42,40,46],backgroundColor:'#1a5fc4',borderRadius:6},{label:'Fail',data:[14,8,12,8,6,10],backgroundColor:'#c4436a',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{backgroundColor:'#0c1a14'}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(12,26,20,.05)'}}}}});
+new Chart(document.getElementById('lineChart'),{type:'line',data:{labels:['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8'],datasets:[{data:[61,63,64,65,66,67,68,68.4],borderColor:'#0a9e6e',backgroundColor:'rgba(10,158,110,.1)',fill:true,tension:.4,borderWidth:2,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:ctx=>ctx.parsed.y+'%'}}},scales:{y:{suggestedMin:55,suggestedMax:75,grid:{color:'rgba(12,26,20,.05)'}}}}});
+
+// Subjects table
+const subjects=[{name:'Mathematics',color:'#c4436a',avg:68,pass:76},{name:'English',color:'#1a5fc4',avg:74,pass:88},{name:'Physical Science',color:'#0a9e6e',avg:71,pass:82},{name:'Geography',color:'#c47d1a',avg:66,pass:79},{name:'Accounting',color:'#7c3aed',avg:72,pass:84}];
+const tbody=document.getElementById('subjBody'); subjects.forEach(s=>{tbody.innerHTML+=`<tr><td><div class="subj-name"><div style="width:8px;height:8px;background:${s.color};border-radius:50%"></div>${s.name}</div></td><td><span style="font-weight:700">${s.avg}%</span></td><td><div style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><div class="pass-bar-wrap"><div class="pass-bar" style="width:${s.pass}%;background:${s.color}"></div></div><span style="font-size:.75rem;font-weight:700">${s.pass}%</span></div></td></tr>`;});
+const bands=[{label:'Distinction 75–100%',pct:22,color:'#0a9e6e'},{label:'Merit 60–74%',pct:35,color:'#1a5fc4'},{label:'Pass 50–59%',pct:28,color:'#c47d1a'},{label:'Fail <50%',pct:15,color:'#c4436a'}]; const gb=document.getElementById('gradeBands'); bands.forEach(b=>{gb.innerHTML+=`<div class="grade-row"><div class="grade-label" style="width:130px">${b.label}</div><div class="grade-bar-wrap"><div class="grade-bar" style="width:${b.pct}%;background:${b.color}"></div></div><div class="grade-pct">${b.pct}%</div></div>`;});
+const activities=[{dot:'#0a9e6e',text:'<strong>Marks submitted</strong> — Grade 12 History by Ms. Tshegofatso',time:'2m ago'},{dot:'#1a5fc4',text:'<strong>New student enrolled</strong> — Kabo Molefe · Grade 10A',time:'18m ago'},{dot:'#c4436a',text:'<strong>Attendance alert</strong> — Lesedi Kgotso (Grade 12) below 60%',time:'42m ago'},{dot:'#c47d1a',text:'<strong>AI lesson plan</strong> created by Mr. Sithole · Grade 11 Maths',time:'1h ago'}];
+const al=document.getElementById('activityList'); activities.forEach(a=>{al.innerHTML+=`<div class="act-item"><div class="act-dot" style="background:${a.dot}"></div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`;});
+const teachers=[{init:'MT',bg:'#0a9e6e',name:'Ms. Tshegofatso',subj:'Mathematics',avg:'72%',submit:'98%'},{init:'JS',bg:'#1a5fc4',name:'Mr. Sithole',subj:'Physical Science',avg:'71%',submit:'95%'},{init:'BM',bg:'#c47d1a',name:'Ms. Modise',subj:'English',avg:'76%',submit:'100%'},{init:'KD',bg:'#c4436a',name:'Mr. Dlamini',subj:'Geography',avg:'66%',submit:'90%'},{init:'NL',bg:'#7c3aed',name:'Ms. Letsholo',subj:'Accounting',avg:'74%',submit:'97%'},{init:'RB',bg:'#059669',name:'Mr. Bok',subj:'History',avg:'78%',submit:'100%'}];
+const tg=document.getElementById('teacherGrid'); teachers.forEach(t=>{tg.innerHTML+=`<div class="teacher-card"><div class="tc-avatar" style="background:${t.bg}">${t.init}</div><div class="tc-name">${t.name}</div><div class="tc-subj">${t.subj}</div><div class="tc-stat" style="display:flex;justify-content:space-between"><span><span style="font-weight:800">${t.avg}</span> avg</span><span><span style="font-weight:800">${t.submit}</span> subm.</span></div></div>`;});
+
+// Heatmap
+const hmMonths=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const hmContainer=document.getElementById('heatmap'); const lblContainer=document.getElementById('hmLabels'); const colors=['#f0ede6','#a3dfc8','#5dbfa3','#1d9e75','#065e42']; hmMonths.forEach(m=>{const d=document.createElement('div');d.className='hm-label';d.textContent=m;lblContainer.appendChild(d)}); for(let i=0;i<12;i++){const val=Math.random(); const col=val<.2?colors[0]:val<.5?colors[1]:val<.7?colors[2]:val<.88?colors[3]:colors[4]; const d=document.createElement('div');d.className='hm-cell';d.style.background=col; hmContainer.appendChild(d);}
+setTimeout(()=>{document.querySelectorAll('.pass-bar,.grade-bar').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>b.style.width=w,50)})},300);
+</script>
+</body>
+</html>

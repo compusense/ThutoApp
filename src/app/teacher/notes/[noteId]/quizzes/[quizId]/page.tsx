@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -63,19 +64,19 @@ const PrintableView = ({ quiz }: { quiz: Quiz }) => {
             <div key={index} className="quiz-question-item">
               <p className="quiz-question-text">{index + 1}. {q.question}</p>
               {q.type === 'multiple-choice' && q.options && (
-                <ol type="A" className="quiz-options-list">
+                <ul className="quiz-options-list">
                   {q.options.map((option, i) => (
                     <li key={i} className="quiz-option">
                       <span>{String.fromCharCode(65 + i)}.</span>
                       <span>{option}</span>
                     </li>
                   ))}
-                </ol>
+                </ul>
               )}
               {q.type === 'true-false' && (
-                <div className="pl-6 space-x-8">
-                  <span>True</span>
-                  <span>False</span>
+                <div className="pl-6 space-x-12 mt-2">
+                  <span className="flex items-center gap-2"><div className="w-4 h-4 border border-black rounded-full" /> True</span>
+                  <span className="flex items-center gap-2"><div className="w-4 h-4 border border-black rounded-full" /> False</span>
                 </div>
               )}
             </div>
@@ -88,8 +89,8 @@ const PrintableView = ({ quiz }: { quiz: Quiz }) => {
         <div className="answer-key-grid">
           {quiz.questions.map((q, index) => (
             <div key={`key-${index}`} className="answer-key-item">
-              <span className="font-bold">{index + 1}.</span>
-              <span>{q.correctAnswer}</span>
+              <span>{index + 1}.</span>
+              <span className="font-bold">{q.correctAnswer}</span>
             </div>
           ))}
         </div>
@@ -236,7 +237,7 @@ export default function QuizPage() {
     <FormProvider {...form}>
       <div className="space-y-6">
         {/* Header with Back button, title, and top actions */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 printable-hidden">
           <div className="flex items-center justify-between">
             <Button variant="ghost" onClick={() => router.push(`/teacher/notes/${noteId}`)} className="-ml-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -282,7 +283,7 @@ export default function QuizPage() {
           <p className="text-muted-foreground">A quiz generated from your lesson notes.</p>
         </div>
 
-        <Card>
+        <Card className="printable-hidden">
           <CardHeader>
             <CardTitle>Questions</CardTitle>
             <CardDescription>
@@ -400,7 +401,7 @@ export default function QuizPage() {
 
         {/* Bottom action buttons: Edit and Delete */}
         {canEdit && (
-          <div className="flex flex-wrap justify-end gap-3">
+          <div className="flex flex-wrap justify-end gap-3 printable-hidden">
             {isEditing ? (
               <>
                 <Button variant="outline" onClick={() => { setIsEditing(false); form.reset(quiz); }}>
@@ -444,7 +445,7 @@ export default function QuizPage() {
         </AlertDialog>
 
         {/* Printable version - hidden on screen */}
-        <div className="hidden print:block mt-12 print:mt-0">
+        <div className="hidden print:block">
           <PrintableView quiz={quiz} />
         </div>
       </div>

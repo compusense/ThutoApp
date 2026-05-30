@@ -1,0 +1,104 @@
+@media print {
+
+  /* Reset the Radix Dialog Portal positioning, overlays, and centered wrappers during print */
+  [data-radix-portal],
+  [data-radix-portal] > div,
+  .fixed.left-\[50\%\].top-\[50\%\] {
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Scope styles specifically for the exam schedule print view inside the Dialog portal */
+  [role="dialog"].printable-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Make sure the scrollable viewport doesn't clip, hide scrollbars, or limit height during print */
+  div.max-h-\[60vh\].overflow-y-auto {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Table styling for a premium, clean layout */
+  .printable-area table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .printable-area th,
+  .printable-area td {
+    border: 1px solid #e2e8f0 !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+    vertical-align: top !important;
+  }
+
+  /* Distinct, bold styling for the table headers */
+  .printable-area th {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .printable-area td {
+    font-size: 0.85rem !important;
+    color: #334155 !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Highlight subjects and sessions cleanly */
+  .printable-area td p.font-semibold {
+    color: #0f172a !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .printable-area td p.text-sm {
+    font-size: 0.8rem !important;
+    color: #475569 !important;
+  }
+
+  .printable-area td p.text-xs {
+    font-size: 0.75rem !important;
+    color: #64748b !important;
+    background-color: #f1f5f9 !important;
+    padding: 4px 6px !important;
+    border-radius: 4px !important;
+    margin-top: 4px !important;
+    display: inline-block !important;
+  }
+
+  /* Prevent table rows from breaking across page pages */
+  .printable-area tr {
+    page-break-inside: avoid !important;
+  }
+
+  /* Adjust page margins for clean alignment without manual scaling */
+  @page {
+    size: landscape;
+    margin: 0.6in;
+  }
+}

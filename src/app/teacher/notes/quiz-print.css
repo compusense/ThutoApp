@@ -1,101 +1,143 @@
-
 @media print {
-  body * {
-    visibility: hidden;
+
+  /* Force portrait orientation for Quizzes */
+  @page {
+    size: portrait;
+    margin: 2cm;
   }
 
+  /* Hide everything on the page first */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show ONLY the specific quiz printing area */
   .printable-quiz-area,
   .printable-quiz-area * {
-    visibility: visible;
+    visibility: visible !important;
   }
 
-  .printable-hidden {
-    display: none !important;
-  }
-
+  /* Reset layout constraints for the printable container */
   .printable-quiz-area {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-    padding: 1rem;
-    font-family: sans-serif;
+    color: black !important;
+    background: white !important;
+    font-family: 'PT Sans', sans-serif;
   }
-  
+
+  /* Define page breaking logic */
   .quiz-print-page {
     page-break-after: always;
+    padding: 0;
+    margin: 0;
   }
 
   .quiz-print-page:last-child {
     page-break-after: avoid;
   }
 
+  .break-before-page {
+    page-break-before: always;
+  }
+
+  /* Header Styling */
   .quiz-print-header {
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid black;
     padding-bottom: 1rem;
     margin-bottom: 2rem;
+    text-align: center;
   }
 
   .quiz-print-title {
-    font-size: 24px;
+    font-size: 26pt;
     font-weight: bold;
-    text-align: center;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
   }
 
   .quiz-print-info {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
-    font-size: 14px;
+    font-size: 12pt;
+    margin-top: 1.5rem;
+    font-weight: bold;
   }
 
+  /* Question List Styling */
   .quiz-print-questions {
-    margin-top: 1.5rem;
-    font-size: 14px;
+    margin-top: 2rem;
   }
 
   .quiz-question-item {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    page-break-inside: avoid;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #eee;
   }
 
   .quiz-question-text {
+    font-size: 14pt;
     font-weight: bold;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
   }
 
   .quiz-options-list {
     list-style-type: none;
-    padding-left: 1.5rem;
+    padding-left: 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .quiz-option {
     display: flex;
     gap: 0.5rem;
+    font-size: 12pt;
+    align-items: center;
   }
-  
+
+  .quiz-option span:first-child {
+    font-weight: bold;
+    min-width: 1.5rem;
+  }
+
+  /* Answer Key Page Styling */
   .answer-key-title {
-    font-size: 20px;
+    font-size: 20pt;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid black;
+    padding-bottom: 0.5rem;
   }
 
   .answer-key-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 1rem;
-    font-size: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    font-size: 13pt;
   }
 
   .answer-key-item {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    border: 1px solid black;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: #f9f9f9;
   }
-  @page {
-    size: landscape;
-    margin: 0.8in;
+
+  .answer-key-item span:first-child {
+    font-weight: bold;
+    color: #444;
+  }
+
+  /* Utility classes */
+  .printable-hidden {
+    display: none !important;
   }
 }

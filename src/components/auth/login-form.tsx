@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -6,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,15 +23,17 @@ import { AppLink } from '../ui/app-link';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
 type LoginFormValues = z.infer<typeof formSchema>;
 
 export function LoginForm() {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+
+  // 1. Add a new state to track successful login
+  const [isSuccess, setIsSuccess] = React.useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(formSchema),
@@ -42,18 +43,23 @@ export function LoginForm() {
     },
   });
 
+  const { isSubmitting } = form.formState;
+
   async function onSubmit(values: LoginFormValues) {
-    setIsSubmitting(true);
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
+
+      // 2. Lock the form button permanently upon success
+      setIsSuccess(true);
+
       toast({
         title: 'Success',
         description: `Login successful...`,
       });
       // The AuthGuard component will handle the redirection automatically.
     } catch (error: any) {
-      let description = 'An unknown error occurred.';
-      // Handle specific Firebase auth errors
+      let description = 'An unexpected error occurred. Please try again later.';
+
       switch (error.code) {
         case 'auth/invalid-credential':
         case 'auth/user-not-found':
@@ -61,23 +67,25 @@ export function LoginForm() {
           description = 'Invalid credentials. Please check your email and password.';
           break;
         case 'auth/user-disabled':
-          description = 'This user account has been disabled.';
+          description = 'This user account has been disabled. Please contact support.';
           break;
         case 'auth/too-many-requests':
-          description = 'Access to this account has been temporarily disabled due to many failed login attempts. You can reset your password or try again later.';
+          description = 'Access temporarily disabled due to multiple failed attempts. Try again later.';
           break;
         default:
-          description = error.message;
+          console.error('Login error:', error);
       }
+
       toast({
         variant: 'destructive',
         title: 'Login Failed',
         description: description,
       });
-    } finally {
-      setIsSubmitting(false);
     }
   }
+
+  // 3. Create a combined loading state for cleaner UI logic
+  const isLoading = isSubmitting || isSuccess;
 
   return (
     <Form {...form}>
@@ -91,9 +99,10 @@ export function LoginForm() {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="admin@example.com"
                   className="bg-transparent"
                   {...field}
+                  disabled={isLoading} // Optional: Lock inputs too
                 />
               </FormControl>
               <FormMessage />
@@ -105,10 +114,10 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-               <div className="flex items-center">
+              <div className="flex items-center">
                 <FormLabel>Password</FormLabel>
-                <AppLink href="#" className="ml-auto inline-block text-sm underline">
-                    Forgot password?
+                <AppLink href="/forgot-password" className="ml-auto inline-block text-sm underline">
+                  Forgot password?
                 </AppLink>
               </div>
               <div className="relative">
@@ -118,15 +127,16 @@ export function LoginForm() {
                     placeholder="••••••••"
                     className="bg-transparent"
                     {...field}
+                    disabled={isLoading} // Optional: Lock inputs too
                   />
                 </FormControl>
-                 <Button
+                <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  disabled={field.value === '' || field.value === undefined}
+                  disabled={!field.value || isLoading}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -142,22 +152,23 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-       
+
         <Button
           type="submit"
           className="w-full font-headline"
-          disabled={isSubmitting}
+          disabled={isLoading} // 4. Apply combined state here
         >
-          {isSubmitting ? 'Signing In...' : 'Sign In'}
-           <ArrowRight className="ml-2 h-4 w-4" />
+          {/* 5. Update text to reflect redirection */}
+          {isSuccess ? 'Redirecting...' : isSubmitting ? 'Signing In...' : 'Sign In'}
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </form>
-       <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <AppLink href="#" className="underline">
-            Sign up
-          </AppLink>
-        </div>
+      <div className="mt-4 text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <AppLink href="/signup" className="underline">
+          Sign up
+        </AppLink>
+      </div>
     </Form>
   );
 }
