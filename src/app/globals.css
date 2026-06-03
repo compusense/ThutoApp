@@ -1,175 +1,387 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   THUTO — Design System Tokens
+   Light: Warm ivory canvas + deep navy type + amber-gold accent
+   Dark:  Deep midnight + soft sand type + terracotta-gold accent
+   ============================================================ */
+
 @layer base {
   :root {
-    --background: 231 56% 95%;
-    --foreground: 231 48% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 231 48% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 231 48% 20%;
-    --primary: 231 48% 48%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 231 56% 90%;
-    --secondary-foreground: 231 48% 20%;
-    --muted: 231 56% 90%;
-    --muted-foreground: 231 48% 40%;
-    --accent: 36 100% 50%;
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 84.2% 60.2%;
+    /* ── Core surfaces ── */
+    --background:           36 30% 96%;      /* warm ivory */
+    --foreground:           225 35% 16%;     /* deep navy ink */
+
+    /* ── Cards & popovers ── */
+    --card:                 0 0% 100%;
+    --card-foreground:      225 35% 16%;
+    --popover:              0 0% 100%;
+    --popover-foreground:   225 35% 16%;
+
+    /* ── Primary — rich indigo-navy ── */
+    --primary:              228 52% 40%;
+    --primary-foreground:   36 100% 97%;
+
+    /* ── Secondary — warm muted blue ── */
+    --secondary:            225 28% 91%;
+    --secondary-foreground: 225 35% 22%;
+
+    /* ── Muted ── */
+    --muted:                225 22% 93%;
+    --muted-foreground:     225 18% 46%;
+
+    /* ── Accent — amber gold ── */
+    --accent:               38 92% 50%;
+    --accent-foreground:    225 35% 12%;
+
+    /* ── Semantic ── */
+    --destructive:          4 82% 56%;
     --destructive-foreground: 0 0% 98%;
-    --border: 231 48% 85%;
-    --input: 231 48% 88%;
-    --ring: 231 48% 48%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --success:              152 60% 35%;
+    --success-foreground:   0 0% 98%;
+    --warning:              38 92% 50%;
+    --warning-foreground:   225 35% 12%;
+
+    /* ── Borders & inputs ── */
+    --border:               225 24% 86%;
+    --input:                225 24% 90%;
+    --ring:                 228 52% 40%;
+
+    /* ── Charts ── */
+    --chart-1:              228 52% 48%;     /* primary blue */
+    --chart-2:              152 55% 40%;     /* teal-green */
+    --chart-3:              38 88% 52%;      /* amber */
+    --chart-4:              10 72% 54%;      /* terracotta */
+    --chart-5:              270 52% 58%;     /* violet */
+
+    /* ── Radius ── */
+    --radius:               0.5rem;
+
+    /* ── Sidebar ── */
+    --sidebar-background:   228 40% 18%;
+    --sidebar-foreground:   36 30% 92%;
+    --sidebar-primary:      38 92% 54%;
+    --sidebar-primary-foreground: 225 35% 12%;
+    --sidebar-accent:       228 38% 24%;
+    --sidebar-accent-foreground: 36 30% 92%;
+    --sidebar-border:       228 38% 26%;
+    --sidebar-ring:         38 92% 54%;
+
+    /* ── Custom brand tokens ── */
+    --gold:                 38 88% 52%;
+    --gold-light:           42 95% 68%;
+    --terracotta:           14 72% 50%;
+    --sand:                 36 55% 88%;
+    --midnight:             225 42% 11%;
   }
 
   .dark {
-    --background: 231 15% 18%;
-    --foreground: 0 0% 98%;
-    --card: 224 15% 15%;
-    --card-foreground: 0 0% 98%;
-    --popover: 231 15% 18%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 231 48% 58%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 231 15% 25%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 231 15% 25%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 36 100% 60%;
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 62.8% 30.6%;
+    /* ── Core surfaces ── */
+    --background:           224 28% 10%;     /* deep midnight */
+    --foreground:           36 28% 90%;      /* warm sand */
+
+    /* ── Cards & popovers ── */
+    --card:                 225 28% 13%;
+    --card-foreground:      36 28% 90%;
+    --popover:              225 28% 13%;
+    --popover-foreground:   36 28% 90%;
+
+    /* ── Primary — brighter for dark bg ── */
+    --primary:              228 60% 62%;
+    --primary-foreground:   224 28% 8%;
+
+    /* ── Secondary ── */
+    --secondary:            225 22% 19%;
+    --secondary-foreground: 36 28% 88%;
+
+    /* ── Muted ── */
+    --muted:                225 22% 17%;
+    --muted-foreground:     225 14% 56%;
+
+    /* ── Accent — warmer gold in dark ── */
+    --accent:               38 88% 56%;
+    --accent-foreground:    224 28% 8%;
+
+    /* ── Semantic ── */
+    --destructive:          4 72% 48%;
     --destructive-foreground: 0 0% 98%;
-    --border: 231 15% 30%;
-    --input: 231 15% 30%;
-    --ring: 231 48% 58%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --success:              152 52% 42%;
+    --success-foreground:   0 0% 98%;
+    --warning:              38 88% 56%;
+    --warning-foreground:   224 28% 8%;
+
+    /* ── Borders & inputs ── */
+    --border:               225 22% 22%;
+    --input:                225 22% 20%;
+    --ring:                 228 60% 62%;
+
+    /* ── Charts ── */
+    --chart-1:              228 62% 62%;
+    --chart-2:              152 58% 48%;
+    --chart-3:              38 88% 58%;
+    --chart-4:              14 70% 58%;
+    --chart-5:              270 55% 65%;
+
+    /* ── Sidebar ── */
+    --sidebar-background:   224 32% 7%;
+    --sidebar-foreground:   36 28% 88%;
+    --sidebar-primary:      38 88% 56%;
+    --sidebar-primary-foreground: 224 28% 8%;
+    --sidebar-accent:       225 28% 13%;
+    --sidebar-accent-foreground: 36 28% 88%;
+    --sidebar-border:       225 22% 15%;
+    --sidebar-ring:         38 88% 56%;
+
+    /* ── Custom brand tokens ── */
+    --gold:                 38 88% 58%;
+    --gold-light:           42 95% 72%;
+    --terracotta:           14 70% 56%;
+    --sand:                 36 40% 80%;
+    --midnight:             224 32% 7%;
   }
 }
 
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
 @layer base {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Hide number input spinners */
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ── Headings inherit brand feel ── */
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+    color: hsl(var(--foreground));
+  }
+
+  /* ── Focus rings ── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 2px);
+  }
+
+  /* ── Selection ── */
+  ::selection {
+    background: hsl(var(--accent) / 0.25);
+    color: hsl(var(--foreground));
+  }
+
+  /* ── Scrollbar — global ── */
+  ::-webkit-scrollbar        { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track  { background: hsl(var(--muted)); }
+  ::-webkit-scrollbar-thumb  {
+    background: hsl(var(--muted-foreground) / 0.35);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.55);
+  }
+
+  /* ── Number inputs ── */
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  input[type=number] {
-    -moz-appearance: textfield;
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* ── Smooth page transitions ── */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
   }
-  
+
+  /* ── Rotating angle property (used by glow animations) ── */
   @property --angle {
     syntax: '<angle>';
     inherits: false;
     initial-value: 0deg;
   }
 
+  /* ── Keyframes ── */
   @keyframes rotate {
-    to {
-      --angle: 360deg;
-    }
+    to { --angle: 360deg; }
+  }
+
+  @keyframes rainbow-progress {
+    0%   { background-position: 0% 50%;   }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%;   }
+  }
+
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(300%)  skewX(-15deg); }
+  }
+
+  @keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--gold) / 0.4); }
+    50%       { box-shadow: 0 0 0 8px hsl(var(--gold) / 0);  }
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0);    }
   }
 
   /* Rainbow Progress Bar */
   .rainbow-progress-bar {
     background: linear-gradient(
       90deg,
-      #ef4444,
-      #f97316,
-      #eab308,
-      #84cc16,
-      #22c55e,
-      #14b8a6,
-      #06b6d4,
-      #3b82f6,
-      #8b5cf6,
-      #d946ef
+      #ef4444, #f97316, #eab308, #84cc16,
+      #22c55e, #14b8a6, #06b6d4, #3b82f6,
+      #8b5cf6, #d946ef
     );
     background-size: 200% 200%;
     animation: rainbow-progress 2s linear infinite;
   }
-
-  @keyframes rainbow-progress {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
 }
 
+/* ============================================================
+   UTILITIES
+   ============================================================ */
 @layer utilities {
+
+  /* ── Accessibility ── */
   .sr-only {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip: rect(0,0,0,0);
     white-space: nowrap;
     border-width: 0;
   }
 
-  /* Custom Gradient for Dashboard Cards */
-  .dashboard-card-gradient {
-    background-image: linear-gradient(to bottom right, #d8e2e5, #e0f2f1, #e3f2fd, #d2dce5);
+  /* ── Animation helpers ── */
+  .animate-fade-in-up   { animation: fade-in-up   0.5s ease both; }
+  .animate-fade-in      { animation: fade-in       0.4s ease both; }
+  .animate-slide-right  { animation: slide-in-right 0.4s ease both; }
+  .animate-pulse-gold   { animation: pulse-gold    2s ease-in-out infinite; }
+
+  /* ── Stagger delays ── */
+  .delay-75  { animation-delay: 75ms;  }
+  .delay-150 { animation-delay: 150ms; }
+  .delay-225 { animation-delay: 225ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-450 { animation-delay: 450ms; }
+
+  /* ── Gradient text ── */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-light)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
+  .text-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--chart-5)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ── Dashboard card gradients ── */
+  .dashboard-card-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)),
+      hsl(var(--secondary) / 0.5)
+    );
+  }
+
+  .dashboard-card-gradient-gold {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gold) / 0.08),
+      hsl(var(--gold) / 0.03)
+    );
+    border: 1px solid hsl(var(--gold) / 0.2);
+  }
+
+  .dashboard-card-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.1),
+      hsl(var(--primary) / 0.04)
+    );
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+
+  /* ── Glass morphism ── */
+  .glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--border) / 0.6);
+  }
+
+  .glass-dark {
+    background: hsl(var(--midnight) / 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--border) / 0.3);
+  }
+
+  /* ── Shimmer loading skeleton ── */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--muted));
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--background) / 0.6),
+      transparent
+    );
+    animation: shimmer 1.6s ease infinite;
+  }
+
+  /* ── Rotating glow border (focus) ── */
   .input-glow-border {
     position: relative;
     z-index: 0;
   }
-
   .input-glow-border::before {
     content: '';
     position: absolute;
     z-index: -1;
-    inset: -2px; /* Border thickness */
+    inset: -2px;
     border-radius: inherit;
     background: conic-gradient(
       from var(--angle),
       hsl(var(--chart-2)),
+      hsl(var(--primary)),
+      hsl(var(--gold)),
       hsl(var(--primary)),
       hsl(var(--chart-2))
     );
@@ -177,65 +389,117 @@
     opacity: 0;
     transition: opacity 0.3s;
   }
+  .input-glow-border:focus-within::before { opacity: 1; }
 
-  .input-glow-border:focus-within::before {
-    opacity: 1;
+  /* ── Stat badge variants ── */
+  .badge-success {
+    background: hsl(var(--success) / 0.12);
+    color: hsl(var(--success));
+    border: 1px solid hsl(var(--success) / 0.25);
   }
-}
+  .badge-warning {
+    background: hsl(var(--warning) / 0.12);
+    color: hsl(var(--warning));
+    border: 1px solid hsl(var(--warning) / 0.25);
+  }
+  .badge-destructive {
+    background: hsl(var(--destructive) / 0.12);
+    color: hsl(var(--destructive));
+    border: 1px solid hsl(var(--destructive) / 0.25);
+  }
+  .badge-primary {
+    background: hsl(var(--primary) / 0.12);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+  .badge-gold {
+    background: hsl(var(--gold) / 0.12);
+    color: hsl(var(--gold));
+    border: 1px solid hsl(var(--gold) / 0.25);
+  }
 
-/* FINAL STICKY TABLE FIXES – Works with any sidebar/navbar */
-@media screen {
-  /* Ensure sticky elements win z-index battle */
+  /* ── Sidebar item active state ── */
+  .sidebar-item-active {
+    background: hsl(var(--sidebar-accent));
+    color: hsl(var(--sidebar-primary));
+    border-left: 2px solid hsl(var(--sidebar-primary));
+  }
+
+  /* ── Table enhancements ── */
+  .table-row-hover:hover {
+    background: hsl(var(--accent) / 0.05);
+    transition: background 0.15s ease;
+  }
+
+  /* ── Sticky table z-index fixes ── */
   .z-50 { z-index: 50 !important; }
   .z-40 { z-index: 40 !important; }
+  .sticky { background-clip: padding-box; }
 
-  /* Beautiful shadow for sticky cells */
-  .shadow-md {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  /* Prevent background bleed */
-  .sticky {
-    background-clip: padding-box;
-  }
-
-  /* Smooth scrolling + modern scrollbar */
-  .overflow-auto {
-    scroll-behavior: smooth;
-  }
-
-  .overflow-auto::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
-  }
-  .overflow-auto::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-    border-radius: 4px;
-  }
-  .overflow-auto::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.4);
+  /* ── Scrollable containers ── */
+  .overflow-auto { scroll-behavior: smooth; }
+  .overflow-auto::-webkit-scrollbar        { height: 7px; width: 7px; }
+  .overflow-auto::-webkit-scrollbar-track  { background: hsl(var(--muted)); border-radius: 4px; }
+  .overflow-auto::-webkit-scrollbar-thumb  {
+    background: hsl(var(--muted-foreground) / 0.35);
     border-radius: 4px;
   }
   .overflow-auto::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.6);
+    background: hsl(var(--muted-foreground) / 0.55);
+  }
+
+  /* ── Divider with label ── */
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .divider-label::before,
+  .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: hsl(var(--border));
+  }
+
+  /* ── Page section ── */
+  .page-section {
+    @apply py-8 px-4 md:px-6 lg:px-8;
+  }
+
+  /* ── Noise texture overlay ── */
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
   }
 }
 
-/* PERFECT PRINTING */
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
 @media print {
-  .printable-hidden {
-    display: none !important;
+  .printable-hidden        { display: none !important; }
+  .printable-page-content  { page-break-after: always; }
+  .printable-page-content:last-child { page-break-after: avoid; }
+  table                    { width: 100% !important; }
+  .report-table            { font-size: 9px !important; }
+
+  body {
+    background: white !important;
+    color: black !important;
   }
-  .printable-page-content {
-    page-break-after: always;
-  }
-  .printable-page-content:last-child {
-    page-break-after: avoid;
-  }
-  table {
-    width: 100% !important;
-  }
-  .report-table {
-    font-size: 9px !important;
+  .glass, .glass-dark {
+    background: white !important;
+    backdrop-filter: none !important;
+    border: 1px solid #ddd !important;
   }
 }
