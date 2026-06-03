@@ -4,7 +4,6 @@
 import { AppLink } from '@/components/ui/app-link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { LoginForm } from '@/components/auth/login-form';
-import { signIn } from 'next-auth/react'; // swap with your actual auth call
 
 /* ─────────────────────────────────────────────────────────────
    INLINE STYLES — self-contained, works alongside Tailwind
