@@ -31,6 +31,13 @@ import {
   Award,
   Building2,
   CalendarDays,
+  ArrowRight,
+  Star,
+  CheckCircle2,
+  Zap,
+  TrendingUp,
+  Clock,
+  Smartphone,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,427 +45,568 @@ const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-background');
 
 const features = [
   {
-    icon: <UserCog className="h-10 w-10 text-primary" />,
+    icon: <UserCog className="h-8 w-8" />,
     title: 'Super Admin',
     description: 'System-wide control to manage users, regions, schools, and curriculum.',
+    gradient: 'from-indigo-500/20 to-indigo-600/10',
+    color: 'text-indigo-500',
   },
   {
-    icon: <School className="h-10 w-10 text-primary" />,
+    icon: <School className="h-8 w-8" />,
     title: 'School Head',
     description: 'Manage students, classes, results, and staff at the school level.',
+    gradient: 'from-emerald-500/20 to-emerald-600/10',
+    color: 'text-emerald-500',
   },
   {
-    icon: <User className="h-10 w-10 text-primary" />,
+    icon: <User className="h-8 w-8" />,
     title: 'Teacher',
     description: 'Focus on classroom tasks, mark entry, and AI-powered lesson planning.',
+    gradient: 'from-amber-500/20 to-amber-600/10',
+    color: 'text-amber-500',
   },
   {
-    icon: <GraduationCap className="h-10 w-10 text-primary" />,
+    icon: <GraduationCap className="h-8 w-8" />,
     title: 'Student',
     description: 'Access personal academic information, notes, quizzes, and results.',
+    gradient: 'from-rose-500/20 to-rose-600/10',
+    color: 'text-rose-500',
   },
 ];
 
 const pillars = [
   {
-    icon: <LayoutDashboard className="h-8 w-8 mb-4 text-primary" />,
+    icon: <LayoutDashboard className="h-7 w-7" />,
     title: 'Modern Frontend',
-    description:
-      'Built with Next.js, React, and Tailwind CSS for a responsive, fast user experience.',
+    description: 'Next.js 15, React, Tailwind CSS, ShadCN/UI — fast, responsive, and accessible.',
   },
   {
-    icon: <ShieldCheck className="h-8 w-8 mb-4 text-primary" />,
+    icon: <ShieldCheck className="h-7 w-7" />,
     title: 'Secure Backend',
-    description:
-      'Powered by Firebase, with Firestore for data and robust Role-Based Access Control.',
+    description: 'Firebase Auth, Firestore, RBAC with Custom Claims — enterprise-grade security.',
   },
   {
-    icon: <Cpu className="h-8 w-8 mb-4 text-primary" />,
+    icon: <Cpu className="h-7 w-7" />,
     title: 'Generative AI',
-    description:
-      'Integrated with Genkit and the Gemini API for smart features that reduce teacher workload.',
+    description: 'Gemini 2.5 Flash + Genkit — intelligent automation for educators.',
   },
 ];
 
 const superAdminFeatures = [
-  { icon: <Building2 className="h-5 w-5" />, text: 'Organizational Hierarchy (Regions & Sub-Regions)' },
-  { icon: <School className="h-5 w-5" />, text: 'School Management & User Lifecycle' },
-  { icon: <BookOpen className="h-5 w-5" />, text: 'Curriculum Foundation & Syllabus Builder' },
-  { icon: <Database className="h-5 w-5" />, text: 'Billing & Usage Monitoring' },
+  'Organizational Hierarchy (Regions & Sub-Regions)',
+  'School Management & User Lifecycle',
+  'Curriculum Foundation & Syllabus Builder',
+  'Billing & Usage Monitoring',
 ];
 
 const teacherFeatures = [
-  { icon: <ScanLine className="h-5 w-5" />, text: 'AI Mark Sheet Scanner (Batch grading)' },
-  { icon: <Sparkles className="h-5 w-5" />, text: 'AI-Powered Lesson Notes & Quiz Generation' },
-  { icon: <FileSpreadsheet className="h-5 w-5" />, text: 'High-speed mark entry with auto-save' },
-  { icon: <Award className="h-5 w-5" />, text: 'AI Remarks & Progress Reports' },
+  'AI Mark Sheet Scanner (Batch grading with Gemini Vision)',
+  'AI-Powered Lesson Notes & Quiz Generation',
+  'High-speed mark entry with auto-save',
+  'AI Remarks & Progress Reports',
 ];
 
 const stats = [
-  { value: '5+', label: 'User Roles', icon: Users },
-  { value: '100%', label: 'Data Centralization', icon: Database },
-  { value: '24/7', label: 'Real-time Access', icon: Globe },
-  { value: 'GenAI', label: 'Teacher Empowerment', icon: Sparkles },
+  { value: '5+', label: 'User Roles', icon: Users, description: 'Tailored experiences' },
+  { value: '100%', label: 'Data Centralization', icon: Database, description: 'Single source of truth' },
+  { value: '24/7', label: 'Real-time Access', icon: Globe, description: 'Anytime, anywhere' },
+  { value: 'AI', label: 'Teacher Empowerment', icon: Sparkles, description: 'GenAI integrated' },
 ];
+
+function ElegantContainer({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn("w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", className)}>
+      {children}
+    </div>
+  );
+}
+
+function SectionHeader({ badge, title, subtitle, centered = true }: { badge?: string; title: React.ReactNode; subtitle?: string; centered?: boolean }) {
+  return (
+    <div className={cn("space-y-4 mb-16", centered && "text-center")}>
+      {badge && (
+        <div className={cn("inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium", centered && "mx-auto")}>
+          <span className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-full blur-sm" />
+          <span className="relative">{badge}</span>
+        </div>
+      )}
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          {subtitle}
+        </p>
+      )}
+    </div>
+  );
+}
 
 function Hero() {
   return (
-    <section className="relative w-full min-h-[90vh] pt-24 flex items-center justify-center text-center text-white overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image with Overlay */}
       {heroImage && (
-        <Image
-          src={heroImage.imageUrl}
-          alt={heroImage.description}
-          fill
-          className="object-cover"
-          priority
-          data-ai-hint={heroImage.imageHint}
-        />
+        <>
+          <Image
+            src={heroImage.imageUrl}
+            alt={heroImage.description}
+            fill
+            className="object-cover"
+            priority
+            data-ai-hint={heroImage.imageHint}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-primary/90" />
+          <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay" />
+        </>
       )}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/75 to-primary/90" />
-      <div className="relative z-10 container px-4 md:px-6 py-12 md:py-16">
-        <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium border border-white/20 mx-auto w-fit">
+
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary-foreground/5 rounded-full blur-3xl animate-pulse delay-1000" />
+      </div>
+
+      <ElegantContainer className="relative z-10 py-20">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mx-auto animate-fade-in-up">
             <Sparkles className="h-4 w-4 text-gold" />
-            <span>AI-Powered Education Management</span>
+            <span className="text-sm font-medium text-white/90">AI-Powered Education Management</span>
           </div>
-          <h1 className="font-bold text-5xl md:text-7xl lg:text-8xl tracking-tighter">
-            Digitizing Schools,{' '}
-            <span className="text-gradient-gold">Empowering Educators</span>
+
+          {/* Main Heading */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white animate-fade-in-up delay-75">
+            Digitizing Schools,
+            <span className="block text-gradient-gold mt-2">Empowering Educators</span>
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/85 max-w-3xl mx-auto leading-relaxed">
+
+          {/* Description */}
+          <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-150">
             ThutoApp is a modern, centralized platform designed to streamline
             school administration, reduce paperwork, and provide real-time
             insights for every role in the educational hierarchy.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 animate-fade-in-up delay-225">
             <AppLink
               href="/login"
-              className={cn(buttonVariants({ size: 'lg', variant: 'cta' }), 'group')}
+              className={cn(
+                buttonVariants({ size: 'lg' }),
+                'bg-white text-primary hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all duration-300 group text-base font-semibold'
+              )}
             >
               Login to Your Portal
-              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </AppLink>
             <AppLink
               href="#features"
-              className={cn(buttonVariants({ size: 'lg', variant: 'outline' }), 'bg-transparent border-white/20 text-white hover:bg-white/10')}
+              className={cn(
+                buttonVariants({ size: 'lg', variant: 'outline' }),
+                'bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 text-base font-semibold'
+              )}
             >
               Explore Features
             </AppLink>
           </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
+              <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-pulse" />
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      </ElegantContainer>
     </section>
   );
 }
 
 function StatsSection() {
   return (
-    <section className="py-16 bg-secondary/30 border-y border-border">
-      <div className="container px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <section className="py-20 border-y border-border/50 bg-gradient-to-b from-background to-secondary/20">
+      <ElegantContainer>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className="text-center space-y-2 animate-fade-in-up"
+              className="text-center space-y-3 group animate-fade-in-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto">
-                <stat.icon className="h-6 w-6" />
+              <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary mx-auto group-hover:scale-110 transition-transform duration-300">
+                <stat.icon className="h-7 w-7" />
+                <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="text-3xl md:text-4xl font-bold text-foreground">{stat.value}</div>
-              <div className="text-sm text-muted-foreground uppercase tracking-wide">{stat.label}</div>
+              <div className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                {stat.value}
+              </div>
+              <div className="font-semibold text-foreground">{stat.label}</div>
+              <div className="text-xs text-muted-foreground">{stat.description}</div>
             </div>
           ))}
         </div>
-      </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 function Features() {
   return (
-    <section id="features" className="py-24 md:py-32">
-      <div className="container px-4 md:px-6">
-        <div className="text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 bg-accent/10 rounded-full px-4 py-1.5 text-sm font-medium text-accent-foreground mx-auto">
-            <Users className="h-4 w-4" />
-            <span>Role-Based Access</span>
-          </div>
-          <h2 className="font-bold text-4xl md:text-5xl tracking-tighter">
-            A Tailored Experience for{' '}
-            <span className="text-gradient-primary">Everyone</span>
-          </h2>
-          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            From system-wide oversight to classroom-level operations, Thuto
-            provides the right tools for the right people.
-          </p>
-        </div>
-        <div className="mx-auto max-w-6xl grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+    <section id="features" className="py-28">
+      <ElegantContainer>
+        <SectionHeader
+          badge="✨ Role-Based Access"
+          title={
+            <>
+              A Tailored Experience for{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Everyone</span>
+            </>
+          }
+          subtitle="From system-wide oversight to classroom-level operations, Thuto provides the right tools for the right people."
+        />
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
-            <Card
+            <div
               key={feature.title}
-              className="text-center border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in-up"
+              className="group relative bg-card rounded-2xl border border-border/50 hover:border-border transition-all duration-500 animate-fade-in-up overflow-hidden"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <CardHeader>
-                <div className="mx-auto bg-gradient-to-br from-primary/10 to-primary/5 p-4 rounded-2xl w-fit">
+              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              <div className="relative p-6 text-center space-y-4">
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} ${feature.color} mx-auto group-hover:scale-110 transition-transform duration-300`}>
                   {feature.icon}
                 </div>
-                <CardTitle className="mt-4 text-xl">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </CardContent>
-            </Card>
+                <h3 className="text-xl font-bold">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+              </div>
+            </div>
           ))}
         </div>
-      </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 function DetailedFeatures() {
   return (
-    <section className="py-24 bg-secondary/30">
-      <div className="container px-4 md:px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          <div className="space-y-8 animate-fade-in-up">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-1.5 text-sm font-medium text-primary mb-4">
-                <UserCog className="h-4 w-4" />
-                <span>System Administration</span>
+    <section className="py-28 bg-gradient-to-b from-secondary/30 to-transparent">
+      <ElegantContainer>
+        <SectionHeader
+          badge="🔧 Core Capabilities"
+          title={
+            <>
+              Everything You Need to{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Succeed</span>
+            </>
+          }
+          subtitle="Powerful tools designed for every level of the education system"
+        />
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Super Admin Card */}
+          <div className="group relative bg-card rounded-2xl border border-border/50 overflow-hidden animate-fade-in-up">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
+            <div className="p-8 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-500">
+                  <UserCog className="h-6 w-6" />
+                </div>
+                <h3 className="text-2xl font-bold">Super Admin</h3>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Super Admin Capabilities
-              </h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground leading-relaxed">
                 Complete control over the educational hierarchy with powerful tools for managing regions, schools, users, and curriculum.
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {superAdminFeatures.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <div className="flex-shrink-0 text-primary">{feature.icon}</div>
-                    <span className="text-foreground/80">{feature.text}</span>
+                  <div key={i} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="h-4 w-4 text-indigo-500 flex-shrink-0" />
+                    <span className="text-foreground/80">{feature}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="pt-4 border-t border-border">
-              <div className="inline-flex items-center gap-2 bg-gold/10 rounded-full px-4 py-1.5 text-sm font-medium text-gold mb-4">
-                <ScanLine className="h-4 w-4" />
-                <span>Classroom Innovation</span>
+          </div>
+
+          {/* Teacher Card */}
+          <div className="group relative bg-card rounded-2xl border border-border/50 overflow-hidden animate-fade-in-up delay-150">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
+            <div className="p-8 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <h3 className="text-2xl font-bold">Teacher AI Tools</h3>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Teacher AI Tools
-              </h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground leading-relaxed">
                 Leverage cutting-edge AI to reduce administrative workload and focus on what matters most—teaching.
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {teacherFeatures.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <div className="flex-shrink-0 text-gold">{feature.icon}</div>
-                    <span className="text-foreground/80">{feature.text}</span>
+                  <div key={i} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                    <span className="text-foreground/80">{feature}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <div className="space-y-8 bg-gradient-to-br from-card to-secondary/20 rounded-2xl p-6 md:p-8 border border-border/50 animate-fade-in-up delay-150">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-success/10 rounded-full px-4 py-1.5 text-sm font-medium text-success mb-4">
-                <BarChart3 className="h-4 w-4" />
-                <span>Advanced Analytics</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Precision in Performance Metrics
-              </h3>
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Thuto ensures accurate performance tracking with intelligent handling of student attendance and historical data.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <div className="h-5 w-5 rounded-full bg-success/20 flex items-center justify-center mt-0.5">
-                      <div className="h-2 w-2 rounded-full bg-success" />
-                    </div>
-                    <span><strong className="text-foreground">Sitting Roll Logic:</strong> Absent students are excluded from pass rates for true classroom performance.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="h-5 w-5 rounded-full bg-success/20 flex items-center justify-center mt-0.5">
-                      <div className="h-2 w-2 rounded-full bg-success" />
-                    </div>
-                    <span><strong className="text-foreground">Immutable Snapshots:</strong> Result snapshots ensure historical consistency.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="h-5 w-5 rounded-full bg-success/20 flex items-center justify-center mt-0.5">
-                      <div className="h-2 w-2 rounded-full bg-success" />
-                    </div>
-                    <span><strong className="text-foreground">Cohort Tracing:</strong> Track student cohorts across promotions.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="bg-card rounded-xl p-5 border border-border/50">
-              <div className="flex items-center gap-2 mb-3">
+        </div>
+
+        {/* Grading Scale Card */}
+        <div className="mt-12 p-8 bg-gradient-to-r from-primary/5 via-secondary/10 to-primary/5 rounded-2xl border border-border/50 animate-fade-in-up delay-300">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
                 <Award className="h-5 w-5 text-gold" />
-                <h4 className="font-semibold">Uniform Grading Scale (Botswana-aligned)</h4>
+                <h4 className="font-semibold text-lg">Botswana-Aligned Grading Scale</h4>
               </div>
-              <div className="grid grid-cols-5 gap-2 text-center text-sm">
-                <div className="bg-success/10 rounded-lg p-2">
-                  <div className="font-bold text-success">A</div>
-                  <div className="text-xs">80%+</div>
+              <p className="text-muted-foreground text-sm">Standardized assessment framework used across all schools</p>
+            </div>
+            <div className="flex gap-3">
+              {[
+                { grade: 'A', range: '80%+', color: 'bg-emerald-500' },
+                { grade: 'B', range: '65-79%', color: 'bg-blue-500' },
+                { grade: 'C', range: '50-64%', color: 'bg-amber-500' },
+                { grade: 'D', range: '30-49%', color: 'bg-orange-500' },
+                { grade: 'E', range: '<30%', color: 'bg-rose-500' },
+              ].map((item) => (
+                <div key={item.grade} className="text-center">
+                  <div className={`w-12 h-12 rounded-full ${item.color} flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                    {item.grade}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">{item.range}</div>
                 </div>
-                <div className="bg-primary/10 rounded-lg p-2">
-                  <div className="font-bold text-primary">B</div>
-                  <div className="text-xs">65-79%</div>
-                </div>
-                <div className="bg-gold/10 rounded-lg p-2">
-                  <div className="font-bold text-gold">C</div>
-                  <div className="text-xs">50-64%</div>
-                </div>
-                <div className="bg-warning/10 rounded-lg p-2">
-                  <div className="font-bold text-warning">D</div>
-                  <div className="text-xs">30-49%</div>
-                </div>
-                <div className="bg-destructive/10 rounded-lg p-2">
-                  <div className="font-bold text-destructive">E</div>
-                  <div className="text-xs">{'<30%'}</div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 function TechPillars() {
   return (
-    <section className="py-24 md:py-32">
-      <div className="container px-4 md:px-6">
-        <div className="text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 bg-secondary rounded-full px-4 py-1.5 text-sm font-medium mx-auto">
-            <Cpu className="h-4 w-4" />
-            <span>Technical Architecture</span>
-          </div>
-          <h2 className="font-bold text-4xl md:text-5xl tracking-tighter">
-            Built on a{' '}
-            <span className="text-gradient-primary">Modern Foundation</span>
-          </h2>
-          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            Thuto leverages a powerful and secure technical architecture to
-            deliver a reliable and scalable experience.
-          </p>
-        </div>
-        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+    <section className="py-28">
+      <ElegantContainer>
+        <SectionHeader
+          badge="⚡ Technical Architecture"
+          title={
+            <>
+              Built on a{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Modern Foundation</span>
+            </>
+          }
+          subtitle="Enterprise-grade technology stack delivering reliability, security, and scale"
+        />
+
+        <div className="grid md:grid-cols-3 gap-8">
           {pillars.map((pillar, index) => (
             <div
               key={pillar.title}
-              className="text-center p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg animate-fade-in-up"
+              className="group relative bg-card rounded-2xl border border-border/50 p-8 text-center hover:shadow-xl transition-all duration-500 animate-fade-in-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 mb-4">
-                {pillar.icon}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary mb-6 group-hover:scale-110 transition-transform duration-300">
+                  {pillar.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-3">{pillar.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
               </div>
-              <h3 className="text-xl font-bold mb-2">{pillar.title}</h3>
-              <p className="text-muted-foreground">{pillar.description}</p>
             </div>
           ))}
         </div>
-      </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 function GlobalSearchSection() {
   return (
-    <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/10 border-y border-border">
-      <div className="container px-4 md:px-6 text-center">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 bg-background rounded-full px-4 py-2 shadow-sm border border-border mx-auto">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Global Entity Search</span>
+    <section className="py-28 bg-gradient-to-r from-primary/5 via-secondary/10 to-primary/5">
+      <ElegantContainer>
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex-1 text-center lg:text-left space-y-6">
+            <div className="inline-flex items-center gap-2 bg-background rounded-full px-4 py-2 border border-border mx-auto lg:mx-0">
+              <Search className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Global Entity Search</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              Find Anything,{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Instantly</span>
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              A fast, role-aware search bar allows users to find students, staff members, or schools instantly, providing quick-action links based on their permissions.
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+              {['Students', 'Staff Members', 'Schools', 'Classes'].map((item) => (
+                <div key={item} className="flex items-center gap-2 bg-card rounded-full px-4 py-2 text-sm border border-border">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">
-            Find Anything, Instantly
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            A fast, role-aware search bar allows users to find students, staff members, or schools instantly, providing quick-action links based on their permissions.
-          </p>
-          <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground bg-card rounded-full px-6 py-3 w-fit mx-auto border border-border">
-            <span className="flex items-center gap-1"><Users className="h-3 w-3" /> Students</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="flex items-center gap-1"><User className="h-3 w-3" /> Staff</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="flex items-center gap-1"><School className="h-3 w-3" /> Schools</span>
+          <div className="flex-1">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-2xl blur-2xl" />
+              <div className="relative bg-card rounded-2xl border border-border p-6 shadow-xl">
+                <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-xl border border-border">
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search for students, teachers, or schools..."
+                    className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
+                    readOnly
+                  />
+                  <kbd className="hidden sm:inline-flex px-2 py-1 text-xs bg-muted rounded border border-border">⌘K</kbd>
+                </div>
+                <div className="mt-4 space-y-2">
+                  {['Thabo Mbeki (Student) · Grade 10A', 'Dr. Sarah Johnson (Teacher) · Mathematics', 'Gaborone Secondary School'].map((result, i) => (
+                    <div key={i} className="p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
+                      <p className="text-sm font-medium">{result.split(' · ')[0]}</p>
+                      {result.includes(' · ') && (
+                        <p className="text-xs text-muted-foreground">{result.split(' · ')[1]}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </ElegantContainer>
+    </section>
+  );
+}
+
+function PerformanceMetrics() {
+  return (
+    <section className="py-28">
+      <ElegantContainer>
+        <SectionHeader
+          badge="📊 Precision Analytics"
+          title={
+            <>
+              Intelligent{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Performance Metrics</span>
+            </>
+          }
+          subtitle="Accurate tracking with intelligent handling of attendance and historical data"
+        />
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: <Users className="h-6 w-6" />,
+              title: 'Sitting Roll Logic',
+              description: 'Absent students are excluded from pass rates, ensuring metrics reflect true classroom performance.',
+              color: 'from-emerald-500/20 to-emerald-600/10',
+            },
+            {
+              icon: <Database className="h-6 w-6" />,
+              title: 'Immutable Snapshots',
+              description: 'Result snapshots ensure historical consistency even when students change classes.',
+              color: 'from-blue-500/20 to-blue-600/10',
+            },
+            {
+              icon: <TrendingUp className="h-6 w-6" />,
+              title: 'Cohort Tracing',
+              description: 'Track student cohorts across promotions to visualize long-term academic progress.',
+              color: 'from-amber-500/20 to-amber-600/10',
+            },
+          ].map((item, index) => (
+            <div
+              key={item.title}
+              className="group bg-card rounded-2xl border border-border/50 p-6 hover:shadow-lg transition-all duration-300 animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className="text-foreground">{item.icon}</div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 function CtaSection() {
   return (
-    <section className="py-24">
-      <div className="container px-4 md:px-6">
+    <section className="py-28">
+      <ElegantContainer>
         <div className="relative rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80" />
-          <div className="absolute inset-0 noise-overlay" />
-          <div className="relative z-10 py-16 px-6 md:py-20 md:px-12 text-center text-white">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/80" />
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gold/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10 py-16 px-6 md:py-20 md:px-12 text-center">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Ready to Transform Your School?
             </h2>
-            <p className="text-lg md:text-xl text-primary-foreground/85 max-w-2xl mx-auto mb-8">
-              Join the digital revolution in education management. Streamline operations, empower teachers, and unlock insights.
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Join the digital revolution in education management. Streamline operations, empower teachers, and unlock actionable insights.
             </p>
             <AppLink
               href="/login"
               className={cn(
-                buttonVariants({ size: 'lg', variant: 'default' }),
-                'bg-white text-primary hover:bg-white/90 shadow-lg hover:shadow-xl transition-all'
+                buttonVariants({ size: 'lg' }),
+                'bg-white text-primary hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all duration-300 group text-base font-semibold'
               )}
             >
               Get Started Today
-              <ChevronRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </AppLink>
           </div>
         </div>
-      </div>
+      </ElegantContainer>
     </section>
   );
 }
 
 export default function LandingPage() {
   return (
-    <div className="bg-background">
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <AppLink href="/" className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="Thuto Logo" width={64} height={64} className="h-16 w-auto" />
-            <span className="font-bold text-xl hidden sm:inline-block bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Thuto
-            </span>
-          </AppLink>
-          <div className="flex items-center gap-3">
-            <AppLink
-              href="/login"
-              className={cn(buttonVariants({ variant: 'outline' }), 'hidden sm:inline-flex')}
-            >
-              Login
+        <ElegantContainer className="py-4">
+          <div className="flex items-center justify-between">
+            <AppLink href="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-md group-hover:blur-xl transition-all duration-300" />
+                <Image src="/logo.svg" alt="Thuto Logo" width={48} height={48} className="h-12 w-auto relative" />
+              </div>
+              <span className="font-bold text-xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                Thuto
+              </span>
             </AppLink>
-            <AppLink
-              href="/login"
-              className={cn(buttonVariants({ variant: 'default' }), 'shadow-sm')}
-            >
-              Portal
-            </AppLink>
+            <div className="flex items-center gap-3">
+              <AppLink
+                href="/login"
+                className={cn(buttonVariants({ variant: 'ghost' }), 'hidden sm:inline-flex text-foreground/70 hover:text-foreground')}
+              >
+                Login
+              </AppLink>
+              <AppLink
+                href="/login"
+                className={cn(buttonVariants({ variant: 'default' }), 'shadow-sm')}
+              >
+                Portal
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </AppLink>
+            </div>
           </div>
-        </div>
+        </ElegantContainer>
       </header>
+
       <main>
         <Hero />
         <StatsSection />
@@ -466,20 +614,26 @@ export default function LandingPage() {
         <DetailedFeatures />
         <TechPillars />
         <GlobalSearchSection />
+        <PerformanceMetrics />
         <CtaSection />
       </main>
-      <footer className="py-12 bg-muted/50 border-t border-border">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="Thuto Logo" width={40} height={40} className="h-10 w-auto" />
-              <span className="font-semibold">Thuto School Management System</span>
+
+      {/* Footer */}
+      <footer className="py-12 bg-secondary/30 border-t border-border">
+        <ElegantContainer>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+            <div className="flex items-center gap-3">
+              <Image src="/logo.svg" alt="Thuto Logo" width={36} height={36} className="h-9 w-auto" />
+              <div>
+                <p className="font-semibold">Thuto School Management System</p>
+                <p className="text-xs text-muted-foreground">Digitizing Schools, Empowering Educators</p>
+              </div>
             </div>
             <div className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} Thuto. All Rights Reserved.
             </div>
           </div>
-        </div>
+        </ElegantContainer>
       </footer>
     </div>
   );
