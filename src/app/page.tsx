@@ -605,45 +605,7 @@ export default function LoginPage() {
         {/* ══════════════════════════════════
             LEFT — cinematic brand panel
         ══════════════════════════════════ */}
-        <div className="tl-panel-left">
-          {loginBg && (
-            <img src={loginBg.imageUrl} alt="" className="tl-bg-img" aria-hidden="true" />
-          )}
-          <div className="tl-atmosphere" />
-          <div className="tl-texture" />
-          <div className="tl-grain" />
-          <div className="tl-scan" />
 
-          {/* Ambient orbs */}
-          <div className="tl-orb tl-orb-1" />
-          <div className="tl-orb tl-orb-2" />
-          <div className="tl-orb tl-orb-3" />
-
-          {/* Kente-inspired diamond accents */}
-          {DIAMONDS.map((d, i) => (
-            <div
-              key={i}
-              className="tl-diamond"
-              style={{
-                top: d.top, left: d.left,
-                animationDelay: d.delay,
-                animationDuration: d.dur,
-              }}
-            />
-          ))}
-
-          {/* Copy */}
-          <div className="tl-left-content">
-            <div className="tl-badge">
-              <span className="tl-badge-dot" />
-              Thuto · Setswana for Education
-            </div>
-
-            <h1 className="tl-left-title">
-              Where
-              <em className="tl-left-em">Learning</em>
-              Begins.
-            </h1>
 
             <p className="tl-left-sub">
               A modern school management platform built for Botswana — from student
@@ -651,25 +613,7 @@ export default function LoginPage() {
               and regional analytics.
             </p>
 
-            <div className="tl-stats">
-              {[
-                { icon: '🎓', value: '12,400+', label: 'Students Enrolled',     bar: '90%' },
-                { icon: '🏫', value: '340',     label: 'Schools Connected',     bar: '68%' },
-                { icon: '🤖', value: '1,290',   label: 'AI Lessons This Week',  bar: '52%' },
-              ].map((s) => (
-                <div className="tl-stat-row" key={s.label}>
-                  <div className="tl-stat-icon">{s.icon}</div>
-                  <div className="tl-stat-body">
-                    <div className="tl-stat-value">{s.value}</div>
-                    <div className="tl-stat-label">{s.label}</div>
-                  </div>
-                  <div className="tl-stat-bar">
-                    <div className="tl-stat-fill" style={{ width: s.bar }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+       
 
           <div className="tl-attribution">Botswana · Est. 2024</div>
         </div>
