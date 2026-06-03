@@ -489,7 +489,7 @@ function PerformanceMetrics() {
     <section className="py-28">
       <ElegantContainer>
         <SectionHeader
-          badge="📊 Precision Analytics"
+          badge="Precision Analytics"
           title={
             <>
               Intelligent{' '}
@@ -584,9 +584,7 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-md group-hover:blur-xl transition-all duration-300" />
                 <Image src="/logo.svg" alt="Thuto Logo" width={48} height={48} className="h-12 w-auto relative" />
               </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                Thuto
-              </span>
+             
             </AppLink>
             <div className="flex items-center gap-3">
               <AppLink
@@ -625,7 +623,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <Image src="/logo.svg" alt="Thuto Logo" width={36} height={36} className="h-9 w-auto" />
               <div>
-                <p className="font-semibold">Thuto School Management System</p>
+                <p className="font-semibold">ThutoApp School Management System</p>
                 <p className="text-xs text-muted-foreground">Digitizing Schools, Empowering Educators</p>
               </div>
             </div>
