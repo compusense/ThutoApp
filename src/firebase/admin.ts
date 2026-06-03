@@ -1,6 +1,9 @@
 
 import * as admin from 'firebase-admin';
-import serviceAccount from '../../service-account.json';
+import path from 'path';
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
+  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+  : require(path.resolve(process.cwd(), 'service-account.json'));
 
 // This function ensures that we only initialize the Firebase Admin SDK once.
 // In serverless environments like Next.js, modules can be re-evaluated,
