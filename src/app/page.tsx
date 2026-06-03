@@ -594,7 +594,7 @@ export default function LoginPage() {
   const handleGoogleSignIn = () => {
     // Replace with your auth provider call, e.g.:
     // signIn('google', { callbackUrl: '/dashboard' });
-    signIn('google', { callbackUrl: '/dashboard' });
+    //signIn('google', { callbackUrl: '/dashboard' });
   };
 
   return (
