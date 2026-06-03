@@ -1,4 +1,5 @@
 'use client';
+'use client';
 
 import { AppLink } from '@/components/ui/app-link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -673,7 +674,138 @@ export default function LoginPage() {
           </div>
 
           <div className="tl-attribution">Botswana · Est. 2024</div>
+    <>
+      <style>{css}</style>
+      <div className="tl-root">
+
+        {/* ══════════════════════════════════
+            LEFT — cinematic brand panel
+        ══════════════════════════════════ */}
+        <div className="tl-panel-left">
+          {loginBg && (
+            <img src={loginBg.imageUrl} alt="" className="tl-bg-img" aria-hidden="true" />
+          )}
+          <div className="tl-atmosphere" />
+          <div className="tl-texture" />
+          <div className="tl-grain" />
+          <div className="tl-scan" />
+
+          {/* Ambient orbs */}
+          <div className="tl-orb tl-orb-1" />
+          <div className="tl-orb tl-orb-2" />
+          <div className="tl-orb tl-orb-3" />
+
+          {/* Kente-inspired diamond accents */}
+          {DIAMONDS.map((d, i) => (
+            <div
+              key={i}
+              className="tl-diamond"
+              style={{
+                top: d.top, left: d.left,
+                animationDelay: d.delay,
+                animationDuration: d.dur,
+              }}
+            />
+          ))}
+
+          {/* Copy */}
+          <div className="tl-left-content">
+            <div className="tl-badge">
+              <span className="tl-badge-dot" />
+              Thuto · Setswana for Education
+            </div>
+
+            <h1 className="tl-left-title">
+              Where
+              <em className="tl-left-em">Learning</em>
+              Begins.
+            </h1>
+
+            <p className="tl-left-sub">
+              A modern school management platform built for Botswana — from student
+              registries and AI-powered lesson planning to real-time math battles
+              and regional analytics.
+            </p>
+
+            <div className="tl-stats">
+              {[
+                { icon: '🎓', value: '12,400+', label: 'Students Enrolled',     bar: '90%' },
+                { icon: '🏫', value: '340',     label: 'Schools Connected',     bar: '68%' },
+                { icon: '🤖', value: '1,290',   label: 'AI Lessons This Week',  bar: '52%' },
+              ].map((s) => (
+                <div className="tl-stat-row" key={s.label}>
+                  <div className="tl-stat-icon">{s.icon}</div>
+                  <div className="tl-stat-body">
+                    <div className="tl-stat-value">{s.value}</div>
+                    <div className="tl-stat-label">{s.label}</div>
+                  </div>
+                  <div className="tl-stat-bar">
+                    <div className="tl-stat-fill" style={{ width: s.bar }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="tl-attribution">Botswana · Est. 2024</div>
         </div>
+
+        {/* ══════════════════════════════════
+            RIGHT — login form
+        ══════════════════════════════════ */}
+        <div className="tl-panel-right">
+          <div className="tl-right-grid" />
+
+          <div className="tl-form-wrapper">
+
+            {/* Wordmark */}
+            <div className="tl-form-logo">
+              <AppLink href="/" className="tl-form-logo-mark">
+                Thuto
+              </AppLink>
+            </div>
+
+            <h2 className="tl-form-heading">Welcome back</h2>
+            <p className="tl-form-sub">
+              Sign in to access your portal.<br />
+              Your classroom is waiting.
+            </p>
+
+            {/* Google sign-in */}
+            <button
+              type="button"
+              className="tl-google-btn"
+              onClick={handleGoogleSignIn}
+            >
+              <GoogleIcon />
+              Continue with Google
+            </button>
+
+            {/* Divider */}
+            <div className="tl-divider">
+              <div className="tl-divider-line" />
+              <span className="tl-divider-text">or use credentials</span>
+              <div className="tl-divider-line" />
+            </div>
+
+            {/* Email + password form */}
+            <div className="tl-form-wrap">
+              <LoginForm />
+            </div>
+
+            {/* Role chips */}
+            <div className="tl-roles">
+              {['Super Admin', 'School Head', 'Teacher', 'Student'].map((r) => (
+                <span key={r} className="tl-role-chip">{r}</span>
+              ))}
+            </div>
+
+            {/* Back link */}
+            <AppLink href="/" className="tl-back-link">
+              <span className="tl-back-arrow">←</span>
+              Back to home
+            </AppLink>
+
 
         {/* ══════════════════════════════════
             RIGHT — login form
@@ -734,9 +866,13 @@ export default function LoginPage() {
           </div>
 
           <div className="tl-right-bottom" />
+
+          <div className="tl-right-bottom" />
         </div>
 
+
       </div>
+    </>
     </>
   );
 }
